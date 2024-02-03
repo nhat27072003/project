@@ -1,0 +1,89 @@
+.add-product {
+    width: 100%;
+    height: 100vh;
+    background: #fce3fe;
+    padding-top: 30px;
+    margin-bottom: 20px;
+}
+.add-product-container{
+    align-items: center;
+    width: 580px;
+    background: white;
+    margin: auto;
+    padding: 20px 60px;
+    border-radius: 20px;
+}
+.add-container h1{
+    margin: 20px 0;
+}
+.add-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+.bt {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 18px; 
+}
+.bt input{
+    width: 100%;
+    height: 35px;
+    border-radius: 20px;
+}
+.bt-select {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    font-size: 20px;
+}
+.bt-select select{
+    width: 150px;
+    height: 30px;
+    border-radius: 20px;
+    font-size: 15px;
+    text-align: center;
+}
+.bt-select option {
+    border-radius: 20px;
+}
+.bt-img {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    font-size: 20px;
+}
+.bt-img input{
+    width: 100%;
+    font-size: 15px;
+}
+.bt-img img{
+    width: 150px;
+    padding-right: 30px;
+}
+span {
+    color: #d15353;
+    font-size: 15px;
+}
+.add-product-container button {
+    width: 100%;
+    height: 45px;
+    color: white;
+    background: #ff4141;
+    margin-top: 30px;
+    border: none;
+    border-radius: 4px;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.add-product-container button:hover {
+    background: #e03a3a;
+}
