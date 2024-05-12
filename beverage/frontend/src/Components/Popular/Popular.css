@@ -1,0 +1,25 @@
+.popular {
+    padding: 50px 100px;
+    align-items: center;
+}
+.popular h1{
+    color: #171717;
+    font-size: 50px;
+    font-weight: 600;
+    text-align: center;
+}
+.popular hr{
+    width: 200px;
+    height: 6px;
+    border-radius: 10px;
+    background: #252525;
+    display: flex;
+    margin: auto;
+}
+.popular-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    justify-content: space-around; 
+  }
+  
+  
