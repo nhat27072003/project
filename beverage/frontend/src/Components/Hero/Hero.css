@@ -1,14 +1,15 @@
 .hero {
     width: 100%;
     height: 100vh;
-    background: linear-gradient(180deg,#fde1ff, #e1ffea22 60%);
+    background: linear-gradient(180deg, #25544b, #e1ffea22 70%);
     background-size: cover;
     background-position: center;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(17rem,auto));
+    grid-template-columns: repeat(auto-fit, minmax(17rem, auto));
     align-items: center;
     gap: 1.5rem;
 }
+
 .hero-left {
     flex: 1;
     display: flex;
@@ -18,24 +19,29 @@
     padding-left: 100px;
     line-height: 1.1;
 }
+
 .hero-left h2 {
     color: #171717;
     font-size: 26px;
     font-weight: 600;
 }
-.hero-left p{
+
+.hero-left p {
     color: #171717;
     font-size: 50px;
     font-weight: 600;
 }
+
 .hand-icon {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.hand-icon img{
+
+.hand-icon img {
     width: 50px;
 }
+
 .hero-latest-btn {
     display: flex;
     justify-content: center;
@@ -51,16 +57,19 @@
     font-weight: 500;
     border: none;
 }
-.hero-latest-btn:hover{
+
+.hero-latest-btn:hover {
     background: #ff2525;
     cursor: pointer;
 }
+
 .hero-right {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.hero-right img{
+
+.hero-right img {
     width: 500px;
 }

@@ -21,7 +21,7 @@
     color: #fff;
     text-align: center;
     border-radius: 15px 15px 0px 0px;
-    background: linear-gradient(-135deg, #c850c0, #4158d0);
+    background: linear-gradient(-135deg, #25544b, #4158d0);
 }
 
 .wrapper form {
@@ -85,7 +85,7 @@
 
 .wrapper form .field button {
     color: #fff;
-    background: linear-gradient(-135deg, #c850c0, #4158d0);
+    background: linear-gradient(-135deg, #25544b, #4158d0);
     font-size: 20px;
     font-weight: 500;
     border: none;
