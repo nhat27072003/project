@@ -1,23 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { getAllAccount, getAccount, signAccount } = require('../controllers/account');
-const { getAllProduct, getPopular, getDetailProduct } = require('../controllers/getProduct');
+const { getAllAccount, handleGetAccount, handleSignAccount } = require('../controllers/account');
+const { handleGetDetailProduct, handleGetAllProduct, handleGetPopular } = require('../controllers/getProduct');
 const { addProduct, updateProducct, deleteProduct } = require('../controllers/manageProduct');
-const { addCart, getTotalCart, getCart, deleteCart } = require('../controllers/manageCart');
-const { createOrder, getOrder, updateOrder, adminOrder } = require('../controllers/manageOrder');
+const { handleAddCart, handleGetTotalCart, handleGetCart, handleDeleteCart } = require('../controllers/manageCart');
+const { handleAdminOrder } = require('../controllers/manageOrder');
+const { handleCreateOrder, handleGetOrder, handleUpdateOrder } = require('../controllers/userOrder');
 const upload = require('../config/saveImage');
 
 router.get('/acount', getAllAccount);
 
-router.post('/login', getAccount);
+router.post('/login', handleGetAccount);
 
-router.post('/sign', signAccount);
+router.post('/sign', handleSignAccount);
 
-router.get('/product', getAllProduct);
+router.get('/product', handleGetAllProduct);
 
-router.get('/popular', getPopular);
+router.get('/popular', handleGetPopular);
 
-router.get('/product/:productId', getDetailProduct);
+router.get('/product/:productId', handleGetDetailProduct);
 
 /*
 router.post('/addproduct', upload.single('image'), async (req, res) => {
@@ -96,20 +97,20 @@ router.put('/products/:productId', upload.single('image'), updateProducct);
 
 router.delete('/deleteproduct/:productId', deleteProduct);
 
-router.post('/cart', addCart);
+router.post('/cart', handleAddCart);
 
-router.post('/totalquantity', getTotalCart);
+router.post('/totalquantity', handleGetTotalCart);
 
-router.post('/getcart', getCart);
+router.post('/getcart', handleGetCart);
 
-router.post('/deleteitem', deleteCart);
+router.post('/deleteitem', handleDeleteCart);
 
-router.post('/createorder', createOrder);
+router.post('/createorder', handleCreateOrder);
 
-router.post('/order', getOrder);
+router.post('/order', handleGetOrder);
 
-router.put('/order/:orderID', updateOrder);
+router.put('/order/:orderID', handleUpdateOrder);
 
-router.get('/admin/orders', adminOrder);
+router.get('/admin/orders', handleAdminOrder);
 
 module.exports = router
