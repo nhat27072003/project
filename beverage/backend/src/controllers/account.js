@@ -21,36 +21,55 @@ const getAllAccount = async (req, res) => {
 };
 
 const handleGetAccount = async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  if (!req.body.username || !req.body.password) {
+    return res.status(200).json({
+      EC: 1,
+      EM: "missleading information",
+      DT: ""
+    })
+  }
+  else {
+    const username = req.body.username;
+    const password = req.body.password;
 
-  const result = await getAccount(username, password);
+    const result = await getAccount(username, password);
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    //console.log(errors);
-    //Trả về lỗi kiểm tra validation
-    res.json({ success: false });
-  } else {
-    if (result.recordset.length > 0) {
-      // Trả về thông báo thành công nếu có dữ liệu được trả về
-      res.json({ success: true });
+    if (result) {
+      res.json({
+        success: true,
+        EC: 0,
+        EM: "",
+        DT: ""
+      });
     } else {
-      // Trả về thông báo thất bại nếu không có dữ liệu được trả về
-      res.json({ success: false });
+      res.json({
+        success: false,
+        EC: 0,
+        EM: "",
+        DT: ""
+      });
     }
   }
 };
 const handleSignAccount = async (req, res) => {
-  const user = {
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password
+  if (!req.body.username || !req.body.email || !req.body.password) {
+    res.status(200).json({
+      EC: 1,
+      EM: "missleading information",
+      DT: ""
+    })
   }
-  if (signAccount(user)) {
-    res.json({ success: true });
-  } else {
-    res.json({ success: false });
+  else {
+    const user = {
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password
+    }
+    if (signAccount(user)) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
   }
 };
 

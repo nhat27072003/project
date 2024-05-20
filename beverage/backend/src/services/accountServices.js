@@ -1,14 +1,35 @@
 const { pool, sql } = require('../config/database');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+
+const hassPassword = (password) => {
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(password, salt);
+  console.log("hash:", hash);
+  return hash;
+}
 
 const getAccount = async (username, password) => {
-  var sqlstring = "SELECT * FROM Users WHERE username= @username AND password= @password";
-  await pool.connect();
-  const result = await pool.request()
-    .input('username', sql.VarChar, username)
-    .input('password', sql.VarChar, password)
-    .query(sqlstring);
+  try {
+    var sqlstring = "SELECT password FROM Users WHERE username= @username ";
+    await pool.connect();
+    const result = await pool.request()
+      .input('username', sql.VarChar, username)
+      .query(sqlstring);
 
-  return result;
+    console.log(result.recordset)
+    if (result.recordset.length < 0) {
+      return false;
+    }
+    else {
+      if (bcrypt.compareSync(password, result.recordset[0].password))
+        return true;
+    }
+  }
+  catch (error) {
+
+  }
 }
 
 const signAccount = async (user) => {
@@ -32,16 +53,18 @@ const signAccount = async (user) => {
         INSERT INTO Cart (UserID, created)
         VALUES (@UserID, 1)`;
 
+    const hassPass = hassPassword(user.password);
     const result = await pool.request()
       .input('username', sql.VarChar, user.username)
       .input('email', sql.VarChar, user.email)
-      .input('password', sql.VarChar, user.password)
+      .input('password', sql.VarChar, hassPass)
       .query(sqlstring);
 
     return true;
   }
   else return false;
 }
+
 module.exports = {
   getAccount,
   signAccount,
