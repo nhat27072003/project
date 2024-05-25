@@ -6,6 +6,7 @@ const { addProduct, updateProducct, deleteProduct } = require('../controllers/ma
 const { handleAddCart, handleGetTotalCart, handleGetCart, handleDeleteCart } = require('../controllers/manageCart');
 const { handleAdminOrder } = require('../controllers/manageOrder');
 const { handleCreateOrder, handleGetOrder, handleUpdateOrder } = require('../controllers/userOrder');
+const { handleUser, handleGetPage } = require('../controllers/manageUser');
 const upload = require('../config/saveImage');
 
 router.get('/acount', getAllAccount);
@@ -42,4 +43,7 @@ router.put('/order/:orderID', handleUpdateOrder);
 
 router.get('/admin/orders', handleAdminOrder);
 
+// router.get('/admin/getuser', handleUser);
+
+router.get('/admin/getuser/getpage', handleGetPage);
 module.exports = router

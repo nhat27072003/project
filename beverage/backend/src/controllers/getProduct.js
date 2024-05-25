@@ -1,4 +1,3 @@
-const { pool, sql } = require('../config/database');
 const { getAllProduct, getPopular, getDetailProduct } = require('../services/getProductServices');
 
 const handleGetAllProduct = async (req, res) => {

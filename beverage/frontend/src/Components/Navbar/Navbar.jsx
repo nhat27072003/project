@@ -32,11 +32,42 @@ const Navbar = () => {
       </ul>
       <div className="nav-login-cart">
         {userData === 'admin' ? (
-          <ul className='admin'>
-            <li onClick={() => { setMenu("") }}><Link to='/admin/crudproduct' style={{ textDecoration: 'none' }}><button>Quản lý sản phẩm</button></Link></li>
-            <li onClick={() => { setMenu("") }}><Link to='/admin/manageorder' style={{ textDecoration: 'none' }}><button>Quản lý đơn hàng</button></Link></li>
-            <li onClick={() => { logout(); setMenu("shop") }}><Link to='/login' style={{ textDecoration: 'none' }}><button>Đăng xuất</button></Link></li>
-          </ul>
+          // <ul className='admin'>
+          //   <li onClick={() => { setMenu("") }}><Link to='/admin/crudproduct' style={{ textDecoration: 'none' }}><button>Quản lý sản phẩm</button></Link></li>
+          //   <li onClick={() => { setMenu("") }}><Link to='/admin/manageorder' style={{ textDecoration: 'none' }}><button>Quản lý đơn hàng</button></Link></li>
+          //   <li onClick={() => { logout(); setMenu("shop") }}><Link to='/login' style={{ textDecoration: 'none' }}><button>Đăng xuất</button></Link></li>
+          // </ul>
+          <>
+            <div className="right-sidebar">
+              <input type="checkbox" id="check" placeholder='i' />
+              <div className="btn-one">
+                <label htmlFor="check">
+                  <i class='bx bxs-user-circle'></i>
+                </label>
+              </div>
+              <div className="sidebar-menu">
+                <div className="menu-title">
+                  <i class='bx bxs-user-circle'></i>
+
+                  <span>{userData}</span>
+                  <Link to='/' onClick={() => { logout(); setMenu("") }}>Đăng xuất</Link>
+                </div>
+                <div className="btn-two">
+                  <label htmlFor="check">
+                    <i class='bx bxs-tag-x'></i>
+                  </label>
+                </div>
+                <div className="menu">
+                  <ul>
+                    <li><Link to='/order' style={{ textDecoration: 'none' }} onClick={() => { setMenu("") }}>Thông báo</Link></li>
+                    <li><Link to='/admin/manageusers' style={{ textDecoration: 'none' }}>Quản lý người dùng</Link></li>
+                    <li><Link to='/admin/manageorder' style={{ textDecoration: 'none' }}>Quản lý đơn hàng</Link></li>
+                    <li><Link to='/' style={{ textDecoration: 'none' }}>Đăng xuất</Link></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </>
         )
           : userData === '' ?
             <>
@@ -60,7 +91,7 @@ const Navbar = () => {
                     <i class='bx bxs-user-circle'></i>
 
                     <span>{userData}</span>
-                    <Link to='/login' onClick={() => { logout(); setMenu("") }}>Đăng xuất</Link>
+                    <Link to='/' onClick={() => { logout(); setMenu("") }}>Đăng xuất</Link>
                   </div>
                   <div className="btn-two">
                     <label htmlFor="check">

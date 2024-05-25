@@ -1,12 +1,16 @@
 .cartitems {
     margin: 30px 170px;
 }
-.cartitems hr{
+
+.cartitems hr {
     height: 3px;
     background: #e2e2e2;
     border: 0;
+    margin: 0;
+    opacity: 1;
 }
-.cartitems-format-main{
+
+.cartitems-format-main {
     display: grid;
     grid-template-columns: 2fr 2fr 2fr 2fr 2fr 1fr;
     align-items: center;
@@ -16,22 +20,27 @@
     font-size: 18px;
     font-weight: 600;
 }
-.cartitems-format{
+
+.cartitems-format {
     font-size: 17px;
     font-weight: 500;
 }
-.carticon-product-icon{
+
+.carticon-product-icon {
     height: 62px;
 }
+
 .cartitems-remove-icon {
     width: 15px;
     padding: 5px;
     border: 2px solid #454545;
     cursor: pointer;
 }
+
 .cartitems-remove-icon:hover {
-background:#fc2f2f;
+    background: #fc2f2f;
 }
+
 .cartitems-quantity {
     width: 50px;
     height: 40px;
@@ -39,10 +48,12 @@ background:#fc2f2f;
     outline: none;
     background: white;
 }
-.cartitems-down{
+
+.cartitems-down {
     display: flex;
     margin: 100px 0;
 }
+
 .cartitems-total {
     flex: 1;
     display: flex;
@@ -50,21 +61,29 @@ background:#fc2f2f;
     margin-right: 200px;
     gap: 40px;
 }
-.cartitems-total-item{
+
+.cartitems-total-item {
     display: flex;
     justify-content: space-between;
     padding: 15px 0;
 }
-.cartitems-total-item input{
+
+.cartitems-total-item p {
+    margin-bottom: 0;
+}
+
+.cartitems-total-item input {
     width: 400px;
     outline: none;
     border: none;
     font-size: 16px;
-    overflow-y: auto; /* Cho phép thanh cuộn y khi nội dung vượt quá kích thước */
+    overflow-y: auto;
+    /* Cho phép thanh cuộn y khi nội dung vượt quá kích thước */
     word-wrap: break-word;
     text-align: right;
 }
-.cartitems-total button{
+
+.cartitems-total button {
     width: 262px;
     height: 58px;
     outline: none;
@@ -72,11 +91,11 @@ background:#fc2f2f;
     background: #ff5a5a;
     color: #fff;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 500;
     border-radius: 10px;
     cursor: pointer;
 }
-.cartitems-total button:hover{
+
+.cartitems-total button:hover {
     background: #fc2f2f;
 }
-
