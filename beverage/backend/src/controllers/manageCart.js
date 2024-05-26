@@ -1,29 +1,47 @@
 const { addCart, getTotalCart, getCart, deleteCart } = require("../services/cartServices");
 
 const handleAddCart = async (req, res) => {
-  //console.log(req.body);
   const username = req.body.userData;
   const productID = req.body.productID;
   const result = await addCart(username, productID);
-  if (result) {
-    res.json({ success: true });
-  }
-  else res.json({ success: false });
+
+  return res.status(200).json({
+    EM: result.EM,
+    EC: result.EC,
+    DT: result.DT
+  })
 }
 const handleGetTotalCart = async (req, res) => {
-  const username = req.body.username;
-  const result = await getTotalCart(username);
-  if (result.recordset.length > 0) {
-    res.json({ total: result.recordset[0].totalQuantity });
+  if (req.query && req.query.username) {
+    const username = req.query.username;
+    const result = await getTotalCart(username);
+
+    res.json({
+      EC: result.EC,
+      EM: result.EM,
+      DT: result.DT
+    })
   }
-  else {
-    res.json({ total: 0 });
-  }
+  else res.json({
+    EM: "missleading params",
+    EC: 2,
+    DT: []
+  })
 }
 const handleGetCart = async (req, res) => {
-  const result = await getCart(req.body.username);
-
-  res.json(result.recordset);
+  if (req.query && req.query.username) {
+    const result = await getCart(req.query.username);
+    res.json({
+      EM: result.EM,
+      EC: result.EC,
+      DT: result.DT
+    });
+  }
+  else res.json({
+    EM: "missleading params",
+    EC: 2,
+    DT: []
+  })
 }
 const handleDeleteCart = async (req, res) => {
   const id = req.body.id;

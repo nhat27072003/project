@@ -16,14 +16,14 @@ const handleCreateOrder = async (req, res) => {
   }
 }
 const handleGetOrder = async (req, res) => {
-  try {
-    const result = await getOrder(req.body.username);
-    res.json(result.recordset);
-  }
-  catch (err) {
-    console.log(err);
-    res.json(err);
-  }
+  console.log("check username: ", req.query.username);
+  const result = await getOrder(req.query.username);
+
+  res.status(200).json({
+    EM: result.EM,
+    EC: result.EC,
+    DT: result.DT
+  });
 }
 const handleUpdateOrder = async (req, res) => {
   const result = await updateOrder(req.params.orderID);

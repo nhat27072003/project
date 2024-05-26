@@ -2,7 +2,6 @@ const { pool, sql } = require('../config/database');
 
 const addCart = async (username, productID) => {
   try {
-
     const sqlstring = `
     SELECT cp.cartProductID FROM CartProduct cp
     JOIN Cart c ON c.cartID = cp.cartID
@@ -19,7 +18,7 @@ const addCart = async (username, productID) => {
       .input('productID', sql.Int, productID)
       .query(sqlstring);
 
-    //console.log(result.recordset);
+
     if (result.recordset.length > 0) {
       const cartProductID = result.recordset[0].cartProductID;
       await pool.request()
@@ -45,33 +44,57 @@ const addCart = async (username, productID) => {
         .input('productID', sql.Int, productID)
         .query(sqlstr);
 
-      return true;
+    }
+    return {
+      EC: 0,
+      EM: "OK",
+      DT: []
     }
   }
   catch (err) {
-    console.log("err cart:", err);
-    return false;
+    return {
+      EM: 'server error',
+      EC: 1,
+      DT: []
+    }
   }
 }
 
 const getTotalCart = async (username) => {
-  await pool.connect();
-  const sqlstring = `SELECT u.username,
+  try {
+    await pool.connect();
+    const sqlstring = `SELECT u.username,
                     SUM(cp.quantity) AS totalQuantity
                     FROM CartProduct cp
                       JOIN Cart c ON c.cartID = cp.cartID
                       JOIN Users u ON u.userID = c.userID
                     WHERE u.username = @username
                     GROUP BY u.username`;
-  const result = await pool.request()
-    .input('username', sql.VarChar, username)
-    .query(sqlstring);
-  return result;
+    const result = await pool.request()
+      .input('username', sql.VarChar, username)
+      .query(sqlstring);
+
+    const total = result.recordset[0].totalQuantity;
+
+    return {
+      EM: "OK",
+      EC: 0,
+      DT: total
+    }
+  }
+  catch (error) {
+    return {
+      EM: "server error",
+      EC: 1,
+      DT: 0
+    }
+  }
 }
 
 const getCart = async (username) => {
-  await pool.connect();
-  const sqlstring = `SELECT p.productID,p.imageUrl,p.name,p.price,cp.quantity,p.price*cp.quantity as sum
+  try {
+    await pool.connect();
+    const sqlstring = `SELECT p.productID,p.imageUrl,p.name,p.price,cp.quantity,p.price*cp.quantity as sum
                       FROM
                         CartProduct cp
                         JOIN Cart c ON c.cartID = cp.cartID
@@ -82,10 +105,23 @@ const getCart = async (username) => {
                       GROUP BY
                         cp.quantity, p.name,p.price,p.imageUrl,p.productID`;
 
-  const result = await pool.request()
-    .input('username', sql.VarChar, username)
-    .query(sqlstring);
-  return result;
+    const result = await pool.request()
+      .input('username', sql.VarChar, username)
+      .query(sqlstring);
+
+    return {
+      EM: "OK",
+      EC: 0,
+      DT: result.recordset
+    };
+  } catch (error) {
+    return {
+      EM: "server error",
+      EC: 1,
+      DT: []
+    }
+  }
+
 }
 const deleteCart = async (id, username) => {
   const sqlstring = `select cp.cartProductID, cp.quantity from cartProduct cp

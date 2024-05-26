@@ -45,18 +45,30 @@ const createOrder = async (userOrder) => {
   else return false;
 }
 const getOrder = async (username) => {
-  await pool.connect();
-  const sqlstring = `SELECT o.orderID, o.status, o.sum ,o.address,o.orderDate, op.oderProductID, op.quantity, op.priceProduct,p.*
+  try {
+    await pool.connect();
+    const sqlstring = `SELECT o.orderID, o.status, o.sum ,o.address,o.orderDate, op.oderProductID, op.quantity, op.priceProduct,p.*
                     FROM Orders o
                     JOIN Users u ON u.userID = o.userID
                     JOIN OrderProduct op ON o.orderID = op.orderID
                     Join Product p ON p.productID = op.productID
                     WHERE u.username = @username`
 
-  const result = await pool.request()
-    .input('username', sql.VarChar, username)
-    .query(sqlstring)
-  return result;
+    const result = await pool.request()
+      .input('username', sql.VarChar, username)
+      .query(sqlstring)
+    return {
+      EM: "OK",
+      EC: 0,
+      DT: result.recordset
+    }
+  } catch (error) {
+    return {
+      EM: "server error",
+      EC: 1,
+      DT: []
+    }
+  }
 }
 const updateOrder = async (orderID) => {
   await pool.connect();

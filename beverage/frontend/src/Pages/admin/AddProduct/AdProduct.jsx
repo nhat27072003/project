@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import './AdProduct.css'
 import hasErrors from './CheckAdd';
+import { addProduct } from '../../../services/manageProduct';
 
 const AddProduct = () => {
   const [productName, setProductName] = useState('');
@@ -23,10 +24,10 @@ const AddProduct = () => {
     const newErrors = { ...errors };
 
     if (category === '') {
-        newErrors.category = 'Chọn loại sản phẩm';
-      } else {
-        newErrors.category = '';
-      }
+      newErrors.category = 'Chọn loại sản phẩm';
+    } else {
+      newErrors.category = '';
+    }
 
     if (productName === '') {
       newErrors.productname = 'Tên sản phẩm không được để trống';
@@ -60,24 +61,25 @@ const AddProduct = () => {
     if (hasErrors(newErrors)) {
       console.log('Có lỗi tồn tại. Không thể thêm sản phẩm.');
     } else {
-        console.log('Không có lỗi. Thêm sản phẩm thành công!');
+      console.log('Không có lỗi. Thêm sản phẩm thành công!');
       // Thêm logic xử lý khi không có lỗi, ví dụ, gửi dữ liệu lên server.
 
-        try {
-          const formData = new FormData();
-          formData.append('productName', productName);
-          formData.append('price', price);
-          formData.append('quantity', quantity);
-          formData.append('category', category);
-          formData.append('image', image);
-          console.log(formData);
-          const response = await axios.post('http://localhost:8081/addproduct', formData);
-          console.log('Server response:', response.data);
-          if(response.data.success)
-            alert("Thêm sản phẩm thành công");
-        } catch (error) {
-          console.error('Error adding product:', error);
-        }
+      try {
+        const formData = new FormData();
+        formData.append('productName', productName);
+        formData.append('price', price);
+        formData.append('quantity', quantity);
+        formData.append('category', category);
+        formData.append('image', image);
+        console.log(formData);
+        const response = await addProduct(formData);
+        if (response.EC == 0)
+          alert("Thêm sản phẩm thành công");
+        else
+          alert("Lỗi: ", response.EM);
+      } catch (error) {
+        console.error('Error adding product:', error);
+      }
 
       setProductName('');
       setPrice('');
@@ -97,7 +99,7 @@ const AddProduct = () => {
     reader.onloadend = () => {
       setImagePreview(reader.result);
     };
- 
+
     if (file) {
       reader.readAsDataURL(file);
     } else {
@@ -114,17 +116,17 @@ const AddProduct = () => {
           <div className="add-fields">
             <div className='bt'>
               <p>Tên sản phẩm:</p>
-              <input type="text" onChange={(e) => setProductName(e.target.value)} name='productname' value={productName}/>
+              <input type="text" onChange={(e) => setProductName(e.target.value)} name='productname' value={productName} />
               {errors.productname === '' ? null : <span>{errors.productname}</span>}
             </div>
             <div className='bt'>
               <p>Giá sản phẩm: (nghìn đồng)</p>
-              <input type="text" onChange={(e) => setPrice(e.target.value)} name='price' value={price}/>
+              <input type="text" onChange={(e) => setPrice(e.target.value)} name='price' value={price} />
               {errors.price === '' ? null : <span>{errors.price}</span>}
             </div>
             <div className='bt'>
               <p>Số lượng:</p>
-              <input type="text" onChange={(e) => setQuantity(e.target.value)} name='quantity' value={quantity}/>
+              <input type="text" onChange={(e) => setQuantity(e.target.value)} name='quantity' value={quantity} />
               {errors.quantity === '' ? null : <span>{errors.quantity}</span>}
             </div>
             <div className='bt-select'>

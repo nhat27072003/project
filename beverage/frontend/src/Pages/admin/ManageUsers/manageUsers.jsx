@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './manageUsers.css';
-import axios from 'axios';
 import ReactPaginate from 'react-paginate';
+import { getUsers } from '../../../services/manageUsers';
 
 const ManageUsers = () => {
-  const [users, setUsers] = useState([]);
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
@@ -12,12 +11,12 @@ const ManageUsers = () => {
 
   const fetchUsers = async (page) => {
     try {
-      const response = await axios.get(`http://localhost:8081/admin/getuser/getpage?page=${page}&limit=${limit}`);
-      if (response.data.EC === 0) {
-        setItems(response.data.DT.users);
-        setPageCount(response.data.DT.totalPage);
+      const response = await getUsers(page, limit);
+      if (response.EC === 0) {
+        setItems(response.DT.users);
+        setPageCount(response.DT.totalPage);
       } else {
-        alert(response.data.EM);
+        alert(response.EM);
       }
     } catch (error) {
       console.error('Error fetching users:', error);

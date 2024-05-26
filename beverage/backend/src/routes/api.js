@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getAllAccount, handleGetAccount, handleSignAccount } = require('../controllers/account');
 const { handleGetDetailProduct, handleGetAllProduct, handleGetPopular } = require('../controllers/getProduct');
-const { addProduct, updateProducct, deleteProduct } = require('../controllers/manageProduct');
+const { addProduct, updateProducct, deleteProduct, handleUpdateProducct, handleAddProduct } = require('../controllers/manageProduct');
 const { handleAddCart, handleGetTotalCart, handleGetCart, handleDeleteCart } = require('../controllers/manageCart');
 const { handleAdminOrder } = require('../controllers/manageOrder');
 const { handleCreateOrder, handleGetOrder, handleUpdateOrder } = require('../controllers/userOrder');
@@ -21,29 +21,28 @@ router.get('/popular', handleGetPopular);
 
 router.get('/product/:productId', handleGetDetailProduct);
 
-router.post('/addproduct', upload.single('image'), addProduct);
+router.post('/addproduct', upload.single('image'), handleAddProduct);
 
-router.put('/products/:productId', upload.single('image'), updateProducct);
+router.put('/products/:productId', upload.single('image'), handleUpdateProducct);
 
 router.delete('/deleteproduct/:productId', deleteProduct);
 
 router.post('/cart', handleAddCart);
 
-router.post('/totalquantity', handleGetTotalCart);
+router.get('/totalquantity', handleGetTotalCart);
 
-router.post('/getcart', handleGetCart);
+router.get('/getcart', handleGetCart);
 
 router.post('/deleteitem', handleDeleteCart);
 
 router.post('/createorder', handleCreateOrder);
 
-router.post('/order', handleGetOrder);
+router.get('/order', handleGetOrder);
 
 router.put('/order/:orderID', handleUpdateOrder);
 
 router.get('/admin/orders', handleAdminOrder);
 
-// router.get('/admin/getuser', handleUser);
-
 router.get('/admin/getuser/getpage', handleGetPage);
+
 module.exports = router

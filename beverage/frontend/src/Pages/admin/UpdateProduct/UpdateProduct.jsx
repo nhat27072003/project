@@ -4,12 +4,13 @@ import hasErrors from '../AddProduct/CheckAdd';
 import './UpdateProduct.css'
 import { useNavigate, useParams } from 'react-router-dom';
 import { ShopContext } from '../../../Context/ShopContext';
+import { getDetailProduct, updateProducct } from '../../../services/manageProduct';
 
 
 const UpdateProduct = () => {
   const navigate = useNavigate();
-  const {getProducts} = useContext(ShopContext);
-  const {productId} = useParams();
+  const { getProducts } = useContext(ShopContext);
+  const { productId } = useParams();
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -24,61 +25,28 @@ const UpdateProduct = () => {
     category: '',
   });
   const imageInputRef = useRef(null);
-/*
+
   useEffect(() => {
-    // Lấy dữ liệu sản phẩm cần sửa từ API hoặc cơ sở dữ liệu và cập nhật state
-    // Ví dụ:
-    axios.get(`http://localhost:8081/product/${productId}`)
-    .then(response => {
-      const productData = response.data;
-      setProductName(productData.productName);
-      setPrice(productData.price);
-      setQuantity(productData.quantity);
-      setCategory(productData.category);
-      setImagePreview(productData.imagePreview);
-    })
-    .catch(error => {
-    console.error('Error fetching product data:', error);
-    });
+    const fetchData = async () => {
+      try {
+        // Lấy dữ liệu sản phẩm cần sửa từ API hoặc cơ sở dữ liệu và cập nhật state
+        const response = await getDetailProduct(productId);
+        const productData = response.DT;
+        setProductName(productData.name || ''); // Sử dụng giá trị mặc định nếu giá trị là undefined
+        setPrice(productData.price || '');
+        setQuantity(productData.stock || '');
+        setCategory(productData.category || '');
+        setImagePreview(productData.imageURL);
+
+        // Gọi hàm getProducts để cập nhật danh sách sản phẩm
+        await getProducts();
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+      }
+    };
+
+    fetchData(); // Gọi hàm fetchData trong useEffect
   }, [productId]);
-*/
-// useEffect(() => {
-//   // Lấy dữ liệu sản phẩm cần sửa từ API hoặc cơ sở dữ liệu và cập nhật state
-//   axios.get(`http://localhost:8081/product/${productId}`)
-//     .then(response => {
-//       const productData = response.data;
-//       setProductName(productData.name || ''); // Sử dụng giá trị mặc định nếu giá trị là undefined
-//       setPrice(productData.price || '');
-//       setQuantity(productData.stock || '');
-//       setCategory(productData.category || '');
-//       setImagePreview(productData.imageURL);
-//       await getProducts();
-//     })
-//     .catch(error => {
-//       console.error('Error fetching product data:', error);
-//     });
-// }, [productId]);
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      // Lấy dữ liệu sản phẩm cần sửa từ API hoặc cơ sở dữ liệu và cập nhật state
-      const response = await axios.get(`http://localhost:8081/product/${productId}`);
-      const productData = response.data;
-      setProductName(productData.name || ''); // Sử dụng giá trị mặc định nếu giá trị là undefined
-      setPrice(productData.price || '');
-      setQuantity(productData.stock || '');
-      setCategory(productData.category || '');
-      setImagePreview(productData.imageURL);
-
-      // Gọi hàm getProducts để cập nhật danh sách sản phẩm
-      await getProducts();
-    } catch (error) {
-      console.error('Error fetching product data:', error);
-    }
-  };
-
-  fetchData(); // Gọi hàm fetchData trong useEffect
-}, [productId]);
 
   const handleEditProduct = async (event) => {
     event.preventDefault();
@@ -111,19 +79,12 @@ useEffect(() => {
     } else {
       newErrors.quantity = '';
     }
-    if(!imagePreview){
+    if (!imagePreview) {
       setImage(imagePreview);
       console.log(imagePreview);
       console.log(image);
     }
-    /*
-    if (!image) {
-      console.log(image);
-      newErrors.image = 'Chưa chọn một file ảnh';
-    } else {
-      newErrors.image = '';
-    }
-    */
+
     setErrors(newErrors);
 
     if (hasErrors(newErrors)) {
@@ -140,9 +101,9 @@ useEffect(() => {
         formData.append('category', category);
         formData.append('image', image);
         console.log(formData);
-        const response = await axios.put(`http://localhost:8081/products/${productId}`, formData);
+        const response = await updateProducct(productId, formData);
         console.log('Product updated:', response.data);
-        if(response.data.success){
+        if (response.data.success) {
           alert("Cập nhật thành công");
           navigate('/admin/crudproduct');
           setProductName('');
@@ -150,16 +111,16 @@ useEffect(() => {
           setQuantity('');
           setImage(null);
           //setImagePreview(null);
-      if (imageInputRef.current) {
-        imageInputRef.current.value = '';
-      }
+          if (imageInputRef.current) {
+            imageInputRef.current.value = '';
+          }
         }
         else alert("Cập nhật sản phẩm thất bại");
       } catch (error) {
         console.error('Error updating product:', error);
       }
 
-      
+
     }
   };
 
@@ -168,7 +129,7 @@ useEffect(() => {
     // Hiển thị hình ảnh nhỏ trước khi tải lên
     const reader = new FileReader();
     //reader.onloadend = () => {
-      //setImagePreview(reader.result);
+    //setImagePreview(reader.result);
     //};
     console.log(file);
     if (file) {
@@ -236,7 +197,7 @@ useEffect(() => {
                   onChange={handleImageChange}
                   name='image'
                   ref={imageInputRef}
-              />
+                />
                 {errors.image === '' ? null : <span>{errors.image}</span>}
               </div>
               {imagePreview && (

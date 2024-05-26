@@ -1,23 +1,51 @@
 const { pool, sql } = require('../config/database');
 
 const getAllProduct = async () => {
-  await pool.connect();
-  const result = await pool.request().query('SELECT * FROM Product where available = 1');
-  return result;
+  try {
+    await pool.connect();
+    const result = await pool.request().query('SELECT * FROM Product where available = 1');
+
+    return {
+      EM: 'OK',
+      EC: 0,
+      DT: result.recordset
+    }
+  }
+  catch (error) {
+    return {
+      EM: 'server error',
+      EC: 1,
+      DT: []
+    }
+  }
 }
 
 const getPopular = async () => {
-  await pool.connect();
-  const sqlstring = `SELECT TOP 10 op.productID,p.name, p.price,p.imageUrl,p.stock, sum(op.quantity) as routerearance_count
+  try {
+    await pool.connect();
+    const sqlstring = `SELECT TOP 10 op.productID,p.name, p.price,p.imageUrl,p.stock, sum(op.quantity) as routerearance_count
     FROM OrderProduct op
     JOIN Product p ON op.productID = p.productID
     WHERE p.available = 1
     GROUP BY op.productID, p.name, p.price,p.stock, p.imageUrl
     ORDER BY routerearance_count DESC;`;
 
-  const result = await pool.request()
-    .query(sqlstring);
-  return result;
+    const result = await pool.request()
+      .query(sqlstring);
+
+    return {
+      EM: 'OK',
+      EC: 0,
+      DT: result.recordset
+    }
+  }
+  catch (error) {
+    return {
+      EM: 'server error',
+      EC: 1,
+      DT: []
+    }
+  }
 }
 
 const getDetailProduct = async (productId) => {

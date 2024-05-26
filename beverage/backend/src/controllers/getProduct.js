@@ -2,20 +2,22 @@ const { getAllProduct, getPopular, getDetailProduct } = require('../services/get
 
 const handleGetAllProduct = async (req, res) => {
   const result = await getAllProduct();
-  if (result.recordset.length > 0) {
-    res.json(result);
-  }
-  else {
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
+
+  res.status(200).json({
+    EM: result.EM,
+    EC: result.EC,
+    DT: result.DT
+  });
 };
 
 const handleGetPopular = async (req, res) => {
   const result = await getPopular();
-  if (result.recordset.length > 0) {
-    res.json(result);
-  }
-  else res.json("NO Popular Product");
+
+  res.status(200).json({
+    EM: result.EM,
+    EC: result.EC,
+    DT: result.DT
+  });
 };
 
 const handleGetDetailProduct = async (req, res) => {

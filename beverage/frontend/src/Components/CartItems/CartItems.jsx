@@ -7,55 +7,47 @@ import { AuthContext } from '../../Pages/AuthProvider'
 import { Link } from 'react-router-dom'
 
 const CartItems = () => {
-    const {getCart,cartItems,removeFromCart,getPopular,getTotalCartItems} = useContext(ShopContext);
-    const [total_sum,setTotal_sum] = useState(0);
+    const { getCart, cartItems, removeFromCart, getPopular, getTotalCartItems } = useContext(ShopContext);
+    const [total_sum, setTotal_sum] = useState(0);
     const [cart, setCart] = useState([]);
-    const {userData} = useContext(AuthContext);
-    const [address,setAddress] = useState('');
-    // const [imageUrl, setImageUrl] = useState('');
-    // const [name, setName] = useState('');
-    // const [price, setPrice] = useState();
-    // const [quantity, setQuantity] = useState(0);
-    // const [sum, setSum] = useState(0);
+    const { userData } = useContext(AuthContext);
+    const [address, setAddress] = useState('');
+
     console.log(cartItems);
-    // useEffect(() => {
-    //     console.log(userData);
-    //     axios.post('http://localhost:8081/getcart',{username: userData})
-    //     .then(res => {
-    //         console.log(res);
-    //         setCart(res.data);
-    //     })
-    const handleInput = (event)=>{
+
+    const handleInput = (event) => {
         setAddress(event.target.value);
     }
     useEffect(() => {
         // Tính tổng giá trị từ cartItems và cập nhật total_sum
         const newTotalSum = cartItems.reduce((sum, item) => sum + item.sum, 0);
         setTotal_sum(newTotalSum);
-      }, [cartItems]); // Theo dõi sự thay đổi của cartItems
+    }, [cartItems]); // Theo dõi sự thay đổi của cartItems
 
-    useEffect(()=>{
+    useEffect(() => {
         getCart();
-    },[]);
-     const handleDelete = async (productId) => {
-        try{console.log({username: userData, id: productId});
-            const result = await axios.post(`http://localhost:8081/deleteitem`,{username: userData, id: productId});
+    }, []);
+    const handleDelete = async (productId) => {
+        try {
+            console.log({ username: userData, id: productId });
+            const result = await axios.post(`/deleteitem`, { username: userData, id: productId });
             console.log(result);
             getCart();
             getTotalCartItems();
-            }
-        catch(err){ console.log(err);
-      }
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
     const createOrder = async (sum) => {
         if (cartItems.length <= 0)
             alert("Không có sản phẩm nào trong giỏ hàng");
         else {
-            const values = { username: userData, total: sum, products: cartItems ,address: address};
+            const values = { username: userData, total: sum, products: cartItems, address: address };
             console.log(values);
             try {
-                const response = await axios.post('http://localhost:8081/createorder', values);
-                
+                const response = await axios.post('/createorder', values);
+
                 if (response.data.success) {
                     alert("Đặt hàng thành công");
                     // Xử lý đồng bộ: Gọi getCart và sau đó gọi getPopular
@@ -71,64 +63,64 @@ const CartItems = () => {
             }
         }
     }
-    
 
-  return (
-    <div className='cartitems'>
-        <div className="cartitems-format-main">
-            <p>Sản phẩm</p>
-            <p>Tên</p>
-            <p>Đơn giá</p>
-            <p>Số lượng</p>
-            <p>Tổng</p>
-            <p>Xóa</p>
-        </div>
-        <hr />
-        {cartItems.map((e)=>{ 
+
+    return (
+        <div className='cartitems'>
+            <div className="cartitems-format-main">
+                <p>Sản phẩm</p>
+                <p>Tên</p>
+                <p>Đơn giá</p>
+                <p>Số lượng</p>
+                <p>Tổng</p>
+                <p>Xóa</p>
+            </div>
+            <hr />
+            {cartItems.map((e) => {
                 return <div>
-                            <div className="cartitems-format cartitems-format-main">
-                                <Link to={`/product/${e.productID}`}>
-                                    <img src={e.imageUrl} className='carticon-product-icon' alt="" />
-                                </Link>
-                                <Link to={`/product/${e.productID}`} style={{textDecoration: 'none',color: '#454545'}}><p>{e.name}</p></Link>
-                                <p>{e.price} .000nvđ</p>
-                                <p>{e.quantity}</p>
-                                <p>{e.sum} .000vnđ</p>
-                                <img className='cartitems-remove-icon' src={remove_icon} onClick={async ()=>{handleDelete(e.productID);}} alt="" />
-                            </div>
-                        </div>
-            
-            //return null;
+                    <div className="cartitems-format cartitems-format-main">
+                        <Link to={`/product/${e.productID}`}>
+                            <img src={e.imageUrl} className='carticon-product-icon' alt="" />
+                        </Link>
+                        <Link to={`/product/${e.productID}`} style={{ textDecoration: 'none', color: '#454545' }}><p>{e.name}</p></Link>
+                        <p>{e.price} .000nvđ</p>
+                        <p>{e.quantity}</p>
+                        <p>{e.sum} .000vnđ</p>
+                        <img className='cartitems-remove-icon' src={remove_icon} onClick={async () => { handleDelete(e.productID); }} alt="" />
+                    </div>
+                </div>
+
+                //return null;
             })}
-        <div className="cartitems-down">
-            <div className="cartitems-total">
-                <h1>Đơn hàng</h1>
-                <div>
-                    <div className="cartitems-total-item">
-                        <p>Giá trị</p>
-                        <p>{total_sum} .000vnđ</p>
+            <div className="cartitems-down">
+                <div className="cartitems-total">
+                    <h1>Đơn hàng</h1>
+                    <div>
+                        <div className="cartitems-total-item">
+                            <p>Giá trị</p>
+                            <p>{total_sum} .000vnđ</p>
+                        </div>
+                        <hr />
+                        <div className="cartitems-total-item">
+                            <p>Địa chỉ</p>
+                            <input type='text' onChange={handleInput} nam='address' placeholder='Nhập địa chỉ' />
+                        </div>
+                        <hr />
+                        <div className="cartitems-total-item">
+                            <p>Phí ship</p>
+                            <p>Miễn phí</p>
+                        </div>
+                        <hr />
+                        <div className="cartitems-total-item">
+                            <h3>Tổng</h3>
+                            <h3>{total_sum} .000vnđ</h3>
+                        </div>
+                        <button onClick={() => createOrder(total_sum)}>Đặt hàng</button>
                     </div>
-                    <hr />
-                    <div className="cartitems-total-item">
-                        <p>Địa chỉ</p>
-                        <input type='text' onChange={handleInput} nam='address' placeholder='Nhập địa chỉ'/>
-                    </div>
-                    <hr/>
-                    <div className="cartitems-total-item">
-                        <p>Phí ship</p>
-                        <p>Miễn phí</p>
-                    </div>
-                    <hr />
-                    <div className="cartitems-total-item">
-                        <h3>Tổng</h3>
-                        <h3>{total_sum} .000vnđ</h3>
-                    </div>
-                    <button onClick={()=>createOrder(total_sum)}>Đặt hàng</button>
                 </div>
             </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default CartItems
