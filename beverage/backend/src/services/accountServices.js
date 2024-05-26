@@ -20,15 +20,27 @@ const getAccount = async (username, password) => {
 
     console.log(result.recordset)
     if (result.recordset.length < 0) {
-      return false;
+      return {
+        EC: 3,
+        EM: "fail login",
+        DT: []
+      };
     }
     else {
       if (bcrypt.compareSync(password, result.recordset[0].password))
-        return true;
+        return {
+          EC: 0,
+          EM: 'OK',
+          DT: []
+        };
     }
   }
   catch (error) {
-
+    return {
+      EC: 3,
+      EM: "fail login",
+      DT: []
+    }
   }
 }
 

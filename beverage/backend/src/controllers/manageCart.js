@@ -44,16 +44,16 @@ const handleGetCart = async (req, res) => {
   })
 }
 const handleDeleteCart = async (req, res) => {
-  const id = req.body.id;
-  const username = req.body.username;
-
+  const id = req.query.id;
+  const username = req.query.username;
+  console.log("id:", id, " username: ", username);
   const result = await deleteCart(id, username);
 
-  if (result) {
-    res.json({ success: true });
-  }
-  else res.json({ success: false });
-
+  res.status(200).json({
+    EC: result.EC,
+    EM: result.EM,
+    DT: result.DT
+  })
 }
 
 module.exports = {

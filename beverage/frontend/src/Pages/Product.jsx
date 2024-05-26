@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Breadcrum from '../Components/Breadcums/Breadcrum';
 import ProductDisplay from '../Components/ProductDisplay/ProductDisplay';
 import RelatedProducts from '../Components/RelatedProducts/RelatedProducts';
-import axios from 'axios';
+import { getDetailProduct } from '../services/manageProduct';
 
 const Product = () => {
   const [product, setProduct] = useState(null);
@@ -12,18 +12,17 @@ const Product = () => {
   const { productId } = useParams();
   useEffect(() => {
     const fetchProduct = async () => {
-      try {
-        // Gọi API để lấy dữ liệu sản phẩm từ backend
-        const response = await axios.get(`http://localhost:8081/product/${productId}`);
-        setProduct(response.data);
+      const response = await getDetailProduct(productId);
+      console.log("check response: ", response);
+      if (response.EC === 0) {
+        setProduct(response.DT[0]);
         setLoading(false);
-      } catch (error) {
-        console.error('Error fetching product data:', error);
+      }
+      else {
         setError('Error fetching product data');
         setLoading(false);
       }
-    };
-
+    }
     fetchProduct();
   }, [productId]);
 

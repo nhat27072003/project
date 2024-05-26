@@ -34,21 +34,11 @@ const handleGetAccount = async (req, res) => {
 
     const result = await getAccount(username, password);
 
-    if (result) {
-      res.json({
-        success: true,
-        EC: 0,
-        EM: "",
-        DT: ""
-      });
-    } else {
-      res.json({
-        success: false,
-        EC: 0,
-        EM: "",
-        DT: ""
-      });
-    }
+    res.status(200).json({
+      EC: result.EC,
+      EM: result.EM,
+      DT: result.DT
+    })
   }
 };
 const handleSignAccount = async (req, res) => {

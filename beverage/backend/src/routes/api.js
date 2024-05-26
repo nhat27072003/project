@@ -33,7 +33,7 @@ router.get('/totalquantity', handleGetTotalCart);
 
 router.get('/getcart', handleGetCart);
 
-router.post('/deleteitem', handleDeleteCart);
+router.delete('/deleteitem', handleDeleteCart);
 
 router.post('/createorder', handleCreateOrder);
 

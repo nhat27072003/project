@@ -21,12 +21,19 @@ const handleGetPopular = async (req, res) => {
 };
 
 const handleGetDetailProduct = async (req, res) => {
-  const result = await getDetailProduct(req.params.productId);
-  if (result.recordset.length > 0) {
-    const productData = result.recordset[0];
-    res.json(productData);
+  if (req.params.productId) {
+    const result = await getDetailProduct(req.params.productId);
+    res.json({
+      EC: result.EC,
+      EM: result.EM,
+      DT: result.DT
+    });
   } else {
-    res.status(404).json({ message: 'Product not found' });
+    res.status(400).json({
+      EC: 3,
+      EM: "missleading params",
+      DT: []
+    })
   }
 };
 

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthProvider';
 import { ShopContext } from '../Context/ShopContext';
+import { loginUser } from '../services/manageUsers';
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -13,7 +14,7 @@ const Login = () => {
   });
 
   const { userData, login, logout } = useContext(AuthContext);
-  //const {updateTotal} = useContext(ShopContext);
+
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const { getCart } = useContext(ShopContext);
@@ -23,33 +24,6 @@ const Login = () => {
     setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  // const submitForm = async () => {
-  //   setErrors(LoginValidation(values));
-  //   if (errors.username === "" && errors.password === "") {
-  //     await axios.post('http://localhost:8081/login', values)
-  //       .then(res => {
-  //         console.log(values);
-  //         //if (res.data.errors) {
-  //         //  setErrLogin(res.data.errors);
-  //         //} else {
-  //           if (res.data.success  && values.username === "admin") {
-  //             login('admin');
-  //             navigate('/');
-  //             getCart();
-  //             console.log(values.username);
-  //           } else if (res.data.success) {
-  //             login(values.username);
-  //             navigate('/');
-  //             //updateTotal();
-  //           } else {
-  //             login('');
-  //             alert("username và mật khẩu không đúng");
-  //           }
-  //         }
-  //       ).catch(err => console.log(err));
-  //   }
-
-  // };
   const submitForm = async (event) => {
     event.preventDefault();
     const validationErrors = LoginValidation(values);
@@ -57,25 +31,21 @@ const Login = () => {
 
     // Kiểm tra lỗi sau khi cập nhật errors
     if (Object.values(validationErrors).every((error) => error === '')) {
-      await axios.post('http://localhost:8081/login', values)
-        .then(res => {
-          console.log(values);
-          if (res.data.success && values.username === "admin") {
-            login('admin');
-            navigate('/');
-            getCart();
-            console.log(values.username);
-          } else if (res.data.success) {
-            login(values.username);
-            navigate('/');
-          } else {
-            login('');
-            alert("username và mật khẩu không đúng");
-          }
-        })
-        .catch(err => console.log(err));
+      const result = await loginUser(values);
+      if (result.EC === 0 && values.username === "admin") {
+        login('admin');
+        navigate('/');
+        getCart();
+        console.log(values.username);
+      } else if (result.EC === 0) {
+        login(values.username);
+        navigate('/');
+      } else {
+        login('');
+        alert("username và mật khẩu không đúng");
+      }
     }
-  };
+  }
   return (
     <div className="login">
       <div className="wrapper">

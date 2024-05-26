@@ -5,38 +5,14 @@ import search_icon from '../Components/Assets/search-icon.png'
 import { ShopContext } from '../Context/ShopContext';
 
 const ShopCategory = (props) => {
-  const {products, getProducts} = useContext(ShopContext);
-  const [sortBy, setSortBy]= useState("");
+  const { products, getProducts } = useContext(ShopContext);
+  const [sortBy, setSortBy] = useState("");
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
   useEffect(() => {
 
-    // Gọi API để lấy dữ liệu sản phẩm từ backend
-    // axios.get('http://localhost:8081/product')
-    //   .then(response => {
-    //     // Dữ liệu trả về từ API
-    //     const dataFromApi = response.data.recordset;
-  
-    //     // Chuyển đổi dữ liệu để có mảng các đối tượng mới
-    //     const transformedData = dataFromApi.map(item => ({
-    //       productID: item.productID,
-    //       name: item.name, // Thay 'name' bằng tên cột tương ứng trong dữ liệu
-    //       price: item.price, // Thay 'price' bằng tên cột tương ứng trong dữ liệu
-    //       stock: item.stock,
-    //       category: item.category,
-    //       imageUrl: item.imageUrl // Thay 'imageURL' bằng tên cột tương ứng trong dữ liệu
-    //     }));
-  
-    //     // Cập nhật state 'products' với mảng mới
-    //     setProducts(transformedData);
-  
-    //     console.log(transformedData);
-    //     console.log(products); // Lưu ý: Đây sẽ hiển thị giá trị ban đầu của 'products', không phải giá trị mới sau khi set state.
-    //   })
-    //   .catch(error => console.error('Error fetching products:', error));
   }, [products]);
   useEffect(() => {
-    // Khi category thay đổi, đặt sortBy về giá trị mặc định
     setSortBy('');
   }, [props.category]);
   const handleSearch = () => {
@@ -58,15 +34,15 @@ const ShopCategory = (props) => {
       <div className='shop-category'>
         <div className="search-sort">
           <div className="shopcategory-search">
-              <label><img src={search_icon} alt="" /></label>
-              <input
-                type="text"
-                placeholder=' search'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <button onClick={handleSearch}>Search</button>
-            </div>
+            <label><img src={search_icon} alt="" /></label>
+            <input
+              type="text"
+              placeholder=' search'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button onClick={handleSearch}>Search</button>
+          </div>
           <div className="shopcategory-sort">
             <label>Sắp xếp </label>
             <select
@@ -100,7 +76,7 @@ const ShopCategory = (props) => {
             .map((item, i) => (
               <Item key={i} id={item.productID} name={item.name} image={item.imageUrl} price={item.price} stock={item.stock} />
             ))}
-          </div>
+        </div>
         <div className="shopcategory-loadmore">
           Explore More
         </div>

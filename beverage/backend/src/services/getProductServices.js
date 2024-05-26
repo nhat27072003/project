@@ -49,16 +49,29 @@ const getPopular = async () => {
 }
 
 const getDetailProduct = async (productId) => {
-  await pool.connect();
-  const request = pool.request();
+  try {
+    await pool.connect();
+    const request = pool.request();
 
-  const query = `SELECT name, price, stock, category, imageURL FROM Product WHERE productID = @productId`;
+    const query = `SELECT name, price, stock, category, imageURL FROM Product WHERE productID = @productId`;
 
-  const result = await request
-    .input('productId', sql.Int, parseInt(productId))
-    .query(query);
+    const result = await request
+      .input('productId', sql.Int, parseInt(productId))
+      .query(query);
 
-  return result;
+    return {
+      EC: 0,
+      EM: "OK",
+      DT: result.recordset
+    };
+  }
+  catch (error) {
+    return {
+      EC: 1,
+      EM: "server error",
+      DT: []
+    }
+  }
 }
 module.exports = {
   getAllProduct,

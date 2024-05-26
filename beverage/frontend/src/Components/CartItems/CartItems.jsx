@@ -5,6 +5,8 @@ import remove_icon from '../Assets/cart_cross_icon.png'
 import axios from 'axios'
 import { AuthContext } from '../../Pages/AuthProvider'
 import { Link } from 'react-router-dom'
+import { delItemCart } from '../../services/userCart'
+import { createOrder } from '../../services/userOrder'
 
 const CartItems = () => {
     const { getCart, cartItems, removeFromCart, getPopular, getTotalCartItems } = useContext(ShopContext);
@@ -28,38 +30,27 @@ const CartItems = () => {
         getCart();
     }, []);
     const handleDelete = async (productId) => {
-        try {
-            console.log({ username: userData, id: productId });
-            const result = await axios.post(`/deleteitem`, { username: userData, id: productId });
-            console.log(result);
+        console.log({ username: userData, id: productId });
+        const result = await delItemCart({ username: userData, id: productId });
+        if (result.EC === 0) {
             getCart();
             getTotalCartItems();
         }
-        catch (err) {
-            console.log(err);
-        }
     }
-    const createOrder = async (sum) => {
+    const handleCreateOrder = async (sum) => {
         if (cartItems.length <= 0)
             alert("Không có sản phẩm nào trong giỏ hàng");
         else {
             const values = { username: userData, total: sum, products: cartItems, address: address };
-            console.log(values);
-            try {
-                const response = await axios.post('/createorder', values);
-
-                if (response.data.success) {
-                    alert("Đặt hàng thành công");
-                    // Xử lý đồng bộ: Gọi getCart và sau đó gọi getPopular
-                    await getCart();
-                    await getPopular();
-                    await getTotalCartItems();
-                } else {
-                    alert("Đặt hàng thất bại");
-                }
-            } catch (error) {
-                console.error("Error creating order:", error);
-                alert("Đã xảy ra lỗi khi đặt hàng");
+            const response = await createOrder(values);
+            if (response.EC === 0) {
+                alert("Đặt hàng thành công");
+                // Xử lý đồng bộ: Gọi getCart và sau đó gọi getPopular
+                await getCart();
+                await getPopular();
+                await getTotalCartItems();
+            } else {
+                alert("Đặt hàng thất bại");
             }
         }
     }
@@ -115,7 +106,7 @@ const CartItems = () => {
                             <h3>Tổng</h3>
                             <h3>{total_sum} .000vnđ</h3>
                         </div>
-                        <button onClick={() => createOrder(total_sum)}>Đặt hàng</button>
+                        <button onClick={() => handleCreateOrder(total_sum)}>Đặt hàng</button>
                     </div>
                 </div>
             </div>

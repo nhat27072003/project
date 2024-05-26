@@ -124,37 +124,54 @@ const getCart = async (username) => {
 
 }
 const deleteCart = async (id, username) => {
-  const sqlstring = `select cp.cartProductID, cp.quantity from cartProduct cp
+  try {
+    const sqlstring = `select cp.cartProductID, cp.quantity from cartProduct cp
                     join Product p on p.productID = cp.productID
                     join Cart c on c.cartID = cp.cartID 
                     join Users u on u.userID = c.userID
                     where u.username = @username and p.productID = @id`;
 
-  await pool.connect();
-  const result = await pool.request()
-    .input('username', sql.VarChar, username)
-    .input('id', sql.Int, id)
-    .query(sqlstring);
+    await pool.connect();
+    const result = await pool.request()
+      .input('username', sql.VarChar, username)
+      .input('id', sql.Int, id)
+      .query(sqlstring);
 
-  if (result.recordset.length > 0) {
-    if (result.recordset[0].quantity > 1) {
-      const cartProductID = result.recordset[0].cartProductID;
-      await pool.request()
-        .input('cartProductID', sql.Int, cartProductID)
-        .query(`UPDATE CartProduct
+    if (result.recordset.length > 0) {
+      if (result.recordset[0].quantity > 1) {
+        const cartProductID = result.recordset[0].cartProductID;
+        await pool.request()
+          .input('cartProductID', sql.Int, cartProductID)
+          .query(`UPDATE CartProduct
                 SET quantity = quantity - 1
                 WHERE  CartProduct.cartProductID = @cartProductID;`);
-    }
-    else {
-      const cartProductID = result.recordset[0].cartProductID;
-      await pool.request()
-        .input('cartProductID', sql.Int, cartProductID)
-        .query(`DELETE FROM CartProduct
+      }
+      else {
+        const cartProductID = result.recordset[0].cartProductID;
+        await pool.request()
+          .input('cartProductID', sql.Int, cartProductID)
+          .query(`DELETE FROM CartProduct
           WHERE cartProductID = @cartProductID`);
+      }
+      return {
+        EC: 0,
+        EM: "OK",
+        DT: []
+      }
     }
-    return true;
+    else return {
+      EC: 3,
+      EM: "no item or user",
+      DT: []
+    };
   }
-  else return false;
+  catch (error) {
+    return {
+      EC: 1,
+      EM: "server error",
+      DT: []
+    }
+  }
 }
 module.exports = {
   addCart,

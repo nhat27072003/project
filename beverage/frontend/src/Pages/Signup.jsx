@@ -3,6 +3,7 @@ import axios from 'axios';
 import './CSS/Signup.css';
 import { Link, useNavigate } from 'react-router-dom';
 import SignupValidation from './SignupValidation';
+import { signupUser } from '../services/manageUsers';
 
 const Signup = () => {
   const [values, setValues] = useState({
@@ -25,17 +26,12 @@ const Signup = () => {
     setErrors(validationErrors);
 
     if (Object.values(validationErrors).every((error) => error === '')) {
-      try {
-        const res = await axios.post('http://localhost:8081/sign', values);
-        if (res.data.success) {
-          alert('Đăng ký tài khoản thành công');
-          navigate('/login');
-        } else {
-          alert('User đã tồn tại');
-        }
-      } catch (error) {
-        console.error('Error occurred:', error);
-        alert('An error occurred. Please try again.');
+      const res = await signupUser(values);
+      if (res.EC === 0) {
+        alert('Đăng ký tài khoản thành công');
+        navigate('/login');
+      } else {
+        alert('User đã tồn tại');
       }
     }
   };

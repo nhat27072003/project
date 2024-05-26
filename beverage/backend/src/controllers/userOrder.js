@@ -8,12 +8,11 @@ const handleCreateOrder = async (req, res) => {
   }
 
   const result = await createOrder(order);
-  if (result) {
-    res.json({ success: true });
-  }
-  else {
-    res.json({ success: false });
-  }
+  res.status(200).json({
+    EC: result.EC,
+    EM: result.EM,
+    DT: result.DT
+  })
 }
 const handleGetOrder = async (req, res) => {
   console.log("check username: ", req.query.username);
@@ -26,8 +25,19 @@ const handleGetOrder = async (req, res) => {
   });
 }
 const handleUpdateOrder = async (req, res) => {
-  const result = await updateOrder(req.params.orderID);
-  res.json(result);
+  if (req.params.orderID) {
+    const result = await updateOrder(req.params.orderID);
+    res.json({
+      EC: result.EC,
+      EM: result.EM,
+      DT: result.DT
+    });
+  }
+  else res.json({
+    EC: 2,
+    EM: "missleading params",
+    DT: []
+  })
 }
 
 module.exports = {
