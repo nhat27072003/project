@@ -1,15 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const { getAllAccount, handleGetAccount, handleSignAccount } = require('../controllers/account');
+const { getAllAccount, handleGetAccount, handleSignAccount, getDetailUser, handleUpdateUser, handleDeleteUser } = require('../controllers/account');
 const { handleGetDetailProduct, handleGetAllProduct, handleGetPopular } = require('../controllers/getProduct');
-const { addProduct, updateProducct, deleteProduct, handleUpdateProducct, handleAddProduct } = require('../controllers/manageProduct');
+const { deleteProduct, handleUpdateProducct, handleAddProduct } = require('../controllers/manageProduct');
 const { handleAddCart, handleGetTotalCart, handleGetCart, handleDeleteCart } = require('../controllers/manageCart');
 const { handleAdminOrder } = require('../controllers/manageOrder');
 const { handleCreateOrder, handleGetOrder, handleUpdateOrder } = require('../controllers/userOrder');
-const { handleUser, handleGetPage } = require('../controllers/manageUser');
+const { handleGetPage, handleGetUsers } = require('../controllers/manageUser');
 const upload = require('../config/saveImage');
 
 router.get('/acount', getAllAccount);
+
+router.get('/detail-user/:userId', getDetailUser);
+
+router.put('/update-user/:userId', handleUpdateUser);
+
+router.delete('/delete-user/:userId', handleDeleteUser);
 
 router.post('/login', handleGetAccount);
 
@@ -43,6 +49,6 @@ router.put('/order/:orderID', handleUpdateOrder);
 
 router.get('/admin/orders', handleAdminOrder);
 
-router.get('/admin/getuser/getpage', handleGetPage);
+router.get('/admin/getuser', handleGetUsers);
 
 module.exports = router

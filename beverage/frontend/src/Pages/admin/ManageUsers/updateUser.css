@@ -1,0 +1,82 @@
+.update-user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.update-user .container {
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 80%;
+  max-width: 800px;
+  transform: translateY(-30px);
+}
+
+.update-user h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.update-user form {
+  display: flex;
+  flex-direction: column;
+}
+
+.update-user .form-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.update-user .form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.update-user .form-group select {
+  font-size: 14px;
+  padding: 10px;
+  width: 100px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+
+.update-user label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.update-user input[type="text"],
+.update-user input[type="email"] {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.update-user input[type="text"]:focus,
+.update-user input[type="email"]:focus {
+  border-color: #aaa;
+}
+
+.update-user .btn {
+  color: #fff;
+  width: 200px;
+  padding: 10px 20px;
+  margin: auto;
+  background-color: #6c757d;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.update-user .btn:hover {
+  background-color: #545d64;
+}

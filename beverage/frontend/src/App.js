@@ -14,6 +14,7 @@ import CRUDProduct from './Pages/admin/CRUDProduct/CRUDProduct';
 import OrderList from './Pages/Order';
 import ManageOrder from './Pages/admin/ManageOrder/ManageOrder';
 import ManageUsers from './Pages/admin/ManageUsers/manageUsers';
+import UpdateUser from './Pages/admin/ManageUsers/updateUser';
 
 
 function App() {
@@ -31,6 +32,9 @@ function App() {
           <Route path='/admin/crudproduct/addproduct' element={<AddProduct />} />
           <Route path='/admin/crudproduct' element={<CRUDProduct />} />
           <Route path='/admin/manageusers' element={<ManageUsers />} />
+          <Route path='admin/updateuser' element={<UpdateUser />} >
+            <Route path=':userId' element={<UpdateUser />} />
+          </Route>
           <Route path='/admin/crudproduct/updateproduct' element={<UpdateProduct />}>
             <Route path=':productId' element={<UpdateProduct />} />
           </Route>

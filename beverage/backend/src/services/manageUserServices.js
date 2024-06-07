@@ -2,15 +2,27 @@ const { pool, sql } = require('../config/database')
 
 const getAllAccount = async () => {
   try {
-    var sqlstring = "select count(userID) as total from Users";
+    var sqlstring = `SELECT u.userID, u.username, u.email, 
+      u.address, u.phone, r.name as role , u.status 
+      FROM Users u 
+	    JOIN Role r ON r.id=u.role`;
     await pool.connect();
     let data = await pool.request()
       .query(sqlstring);
 
-    return data.recordset[0].total;
+    return {
+      EC: 0,
+      EM: 'OK',
+      DT: data.recordset
+    };
   }
   catch (error) {
-    return 0;
+    console.log(error)
+    return {
+      EC: 2,
+      EM: 'server error',
+      DT: []
+    }
   }
 }
 
@@ -19,7 +31,8 @@ const getPage = async (page, limit) => {
     let offset = (page - 1) * limit;
 
     let sqlString = `
-    SELECT userID, username, email, address, phone FROM Users
+    SELECT u.userID, u.username, u.email, u.address, u.phone, r.name as role, u.status FROM Users u
+    JOIN Role r ON r.id = u.role
     ORDER BY userID
     OFFSET @cur ROWS
     FETCH NEXT @limit ROWS ONLY

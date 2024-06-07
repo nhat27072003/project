@@ -9,41 +9,17 @@ const { getAllAccount, getPage } = require("../services/manageUserServices");
 //   })
 // }
 
-const handleGetPage = async (req, res) => {
-  if (req.query.limit && req.query.page) {
+const handleGetUsers = async (req, res) => {
 
-    let limit = req.query.limit;
-    let page = req.query.page;
-
-    let total = await getAllAccount();
-    let data = await getPage(page, limit);
-    const dataset = {
-      totalPage: Math.ceil(total / limit),
-      totalRow: total,
-      users: data.DT
-    }
-    if (page > dataset.totalPage)
-      res.status(200).json({
-        EM: "page out-of-bounds",
-        EC: 2,
-        DT: []
-      })
-    else {
-      res.status(200).json({
-        EM: data.EM,
-        EC: data.EC,
-        DT: dataset
-      })
-    }
-  }
-  else res.status(200).json({
-    EM: "missleading params",
-    EC: 2,
-    DT: []
+  let users = await getAllAccount();
+  res.status(200).json({
+    EM: users.EM,
+    EC: users.EC,
+    DT: users.DT
   })
 }
 
 module.exports = {
   // handleUser,
-  handleGetPage
+  handleGetUsers
 }
