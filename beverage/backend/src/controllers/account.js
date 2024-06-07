@@ -1,6 +1,6 @@
 const { pool, sql } = require('../config/database');
 const { check, validationResult } = require('express-validator');
-const { getAccount, signAccount } = require('../services/accountServices');
+const { getAccount, signAccount, detailUser, updateUser, deleteUser } = require('../services/accountServices');
 
 const getAllAccount = async (req, res) => {
   var sqlstring = 'SELECT * FROM Users';
@@ -20,6 +20,23 @@ const getAllAccount = async (req, res) => {
   }
 };
 
+const getDetailUser = async (req, res) => {
+  if (req.params.userId) {
+    const result = await detailUser(req.params.userId);
+    res.status(200).json({
+      EC: result.EC,
+      EM: result.EM,
+      DT: result.DT
+    })
+  }
+  else res.json(
+    {
+      EC: 2,
+      EM: "error params",
+      DT: []
+    }
+  )
+}
 const handleGetAccount = async (req, res) => {
   if (!req.body.username || !req.body.password) {
     return res.status(200).json({
@@ -63,8 +80,47 @@ const handleSignAccount = async (req, res) => {
   }
 };
 
+const handleUpdateUser = async (req, res) => {
+  if (req.params.userId && req.body.values) {
+    const result = await updateUser(req.body.values);
+
+    res.status(200).json({
+      EC: result.EC,
+      EM: result.EM,
+      DT: result.DT
+    })
+  }
+  else {
+    res.status(200).json({
+      EC: 1,
+      EM: "missleading values",
+      DT: []
+    })
+  }
+}
+
+const handleDeleteUser = async (req, res) => {
+  console.log(req.params.userId);
+  if (req.params.userId) {
+    const result = await deleteUser(req.params.userId);
+
+    res.status(200).json({
+      EC: result.EC,
+      EM: result.EM,
+      DT: result.DT
+    })
+  }
+  else res.json({
+    EC: 1,
+    EM: "missleading params",
+    DT: []
+  })
+}
 module.exports = {
   handleGetAccount,
   getAllAccount,
   handleSignAccount,
+  getDetailUser,
+  handleUpdateUser,
+  handleDeleteUser
 }

@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
 import hasErrors from '../AddProduct/CheckAdd';
 import './UpdateProduct.css'
 import { useNavigate, useParams } from 'react-router-dom';
