@@ -1,15 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const { getAllAccount, handleGetAccount, handleSignAccount, getDetailUser, handleUpdateUser, handleDeleteUser } = require('../controllers/account');
+const { handleSignAccount, handleLogin, handleGetCookie } = require('../controllers/account');
 const { handleGetDetailProduct, handleGetAllProduct, handleGetPopular } = require('../controllers/getProduct');
 const { deleteProduct, handleUpdateProducct, handleAddProduct } = require('../controllers/manageProduct');
 const { handleAddCart, handleGetTotalCart, handleGetCart, handleDeleteCart } = require('../controllers/manageCart');
 const { handleAdminOrder } = require('../controllers/manageOrder');
 const { handleCreateOrder, handleGetOrder, handleUpdateOrder } = require('../controllers/userOrder');
-const { handleGetPage, handleGetUsers } = require('../controllers/manageUser');
+const { handleGetUsers, getDetailUser, handleUpdateUser, handleDeleteUser, handleGetAllAccount } = require('../controllers/manageUser');
 const upload = require('../config/saveImage');
+const { authenicateUser } = require('../middleware/auth');
 
-router.get('/acount', getAllAccount);
+//authenicate user
+router.all('*', authenicateUser);
+
+router.get('/acount', handleGetAllAccount);
 
 router.get('/detail-user/:userId', getDetailUser);
 
@@ -17,9 +21,11 @@ router.put('/update-user/:userId', handleUpdateUser);
 
 router.delete('/delete-user/:userId', handleDeleteUser);
 
-router.post('/login', handleGetAccount);
+router.post('/login', handleLogin);
 
 router.post('/sign', handleSignAccount);
+
+router.get('/cookie', handleGetCookie);
 
 router.get('/product', handleGetAllProduct);
 

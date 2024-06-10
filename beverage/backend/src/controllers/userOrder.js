@@ -15,7 +15,6 @@ const handleCreateOrder = async (req, res) => {
   })
 }
 const handleGetOrder = async (req, res) => {
-  console.log("check username: ", req.query.username);
   const result = await getOrder(req.query.username);
 
   res.status(200).json({

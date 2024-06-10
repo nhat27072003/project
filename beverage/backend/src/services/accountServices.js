@@ -1,24 +1,58 @@
 const { pool, sql } = require('../config/database');
 const bcrypt = require('bcrypt');
+const { createToken, verifyToken } = require('../middleware/JWTAction');
 const saltRounds = 10;
 
 
 const hassPassword = (password) => {
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(password, salt);
-  console.log("hash:", hash);
   return hash;
 }
+const getRole = async (username) => {
+  try {
+    let sqlstr = `select r.name from Role r 
+      join Users u on u.role=r.id
+      where u.username=@username`;
 
+    await pool.connect();
+    const result = await pool.request()
+      .input('username', sql.VarChar, username)
+      .query(sqlstr)
+
+    return result.recordset[0].name;
+  }
+  catch (error) {
+    return ''
+  }
+}
+const getUrl = async (username) => {
+  try {
+    let sqlstr = `select a.url from ApiUrl a 
+      Join GroupRole r on r.UrlId=a.id
+      Join Users u on u.role=r.roleId
+      where u.username=@username`;
+
+    await pool.connect();
+    const result = await pool.request()
+      .input('username', sql.VarChar, username)
+      .query(sqlstr)
+
+    return result.recordset;
+  }
+  catch (error) {
+
+    return []
+  }
+}
 const getAccount = async (username, password) => {
   try {
-    var sqlstring = "SELECT password FROM Users WHERE username= @username ";
+    var sqlstring = "SELECT email, password FROM Users WHERE username= @username ";
     await pool.connect();
     const result = await pool.request()
       .input('username', sql.VarChar, username)
       .query(sqlstring);
 
-    console.log(result.recordset)
     if (result.recordset.length < 0) {
       return {
         EC: 3,
@@ -27,12 +61,32 @@ const getAccount = async (username, password) => {
       };
     }
     else {
-      if (bcrypt.compareSync(password, result.recordset[0].password))
+      if (bcrypt.compareSync(password, result.recordset[0].password)) {
+        let role = await getRole(username);
+        let url = await getUrl(username);
+        let payload = {
+          email: result.recordset[0].email,
+          username: username,
+          role: role,
+          url
+        }
+        let token = createToken(payload);
         return {
           EC: 0,
           EM: 'OK',
-          DT: []
+          DT: {
+            access_token: token,
+            role
+          }
         };
+      }
+      else {
+        return {
+          EC: 3,
+          EM: "fail login",
+          DT: []
+        }
+      }
     }
   }
   catch (error) {
@@ -43,7 +97,6 @@ const getAccount = async (username, password) => {
     }
   }
 }
-
 const signAccount = async (user) => {
   var sqlstr = "SELECT * FROM Users WHERE username= @username";
 
@@ -66,7 +119,7 @@ const signAccount = async (user) => {
         VALUES (@UserID, 1)`;
 
     const hassPass = hassPassword(user.password);
-    const result = await pool.request()
+    await pool.request()
       .input('username', sql.VarChar, user.username)
       .input('email', sql.VarChar, user.email)
       .input('password', sql.VarChar, hassPass)
@@ -76,107 +129,40 @@ const signAccount = async (user) => {
   }
   else return false;
 }
-const detailUser = async (userID) => {
-  try {
-    var sqlstr = `select u.userID, u.username, u.email, u.name, u.address, u.phone, r.name as role 
-                from Users u join Role r on r.id=u.role
-                where u.userID = @userID`;
-
-    await pool.connect();
-    const result = await pool.request()
-      .input('userID', sql.Int, userID)
-      .query(sqlstr);
-
+const getCookie = async (cookie) => {
+  const decoded = await verifyToken(cookie);
+  if (decoded) {
     return {
       EC: 0,
       EM: "OK",
-      DT: result.recordset[0]
-    }
-  }
-  catch (error) {
-    return {
-      EC: 1,
-      EM: "server error",
-      DT: []
-    }
-  }
-}
-
-const updateUser = async (values) => {
-  try {
-    await pool.connect();
-    const role = await pool.request()
-      .input('name', sql.VarChar, values.role)
-      .query('select id from Role where name = @name')
-
-    const roleId = role.recordset[0].id;
-    if (role.recordset.length > 0) {
-      let sqlstr = `UPDATE users
-                    SET
-                      address = @address,
-                      email = @email,
-                      name = @name,
-                      phone = @phone,
-                      role = @role
-                    WHERE userID = @userId;`
-
-      await pool.request()
-        .input('address', sql.VarChar, values.address)
-        .input('email', sql.VarChar, values.email)
-        .input('name', sql.VarChar, values.name)
-        .input('phone', sql.VarChar, values.phone)
-        .input('role', sql.Int, +roleId)
-        .input('userId', sql.Int, +values.userID)
-        .query(sqlstr);
-
-      return {
-        EC: 0,
-        EM: "OK",
-        DT: []
+      DT: {
+        user: {
+          username: decoded.username,
+          role: decoded.role
+        },
+        isauthenicated: true
       }
     }
-
   }
-  catch (error) {
-    console.log(error);
+  else {
     return {
       EC: 2,
-      EM: "server error",
-      DT: []
+      EM: "verify fail cookie",
+      DT: {
+        isauthenicated: false,
+        user: {
+          username: '',
+          role: '',
+        }
+      }
     }
   }
 }
 
-const deleteUser = async (userId) => {
-  try {
-    const sqlstr = `UPDATE users
-      SET status = 1
-      WHERE userID = @userId;`
-
-    await pool.connect();
-    await pool.request()
-      .input('userId', sql.Int, +userId)
-      .query(sqlstr);
-
-    return {
-      EC: 0,
-      EM: "ok",
-      DT: []
-    }
-  }
-  catch (error) {
-    console.log(error)
-    return {
-      EC: 2,
-      EM: "server error",
-      DT: []
-    }
-  }
-}
 module.exports = {
   getAccount,
   signAccount,
-  detailUser,
-  updateUser,
-  deleteUser
+  getRole,
+  getUrl,
+  getCookie
 }

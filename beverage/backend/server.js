@@ -4,12 +4,26 @@ const router = require('./src/routes/api');
 require('dotenv').config();
 const cors = require('cors');
 var bodyParser = require('body-parser');
-
+var cookieParser = require('cookie-parser')
 const port = process.env.PORT || 8081
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+//config body-parser
+app.use(cookieParser());
+
+//config cors
+app.use(
+    cors({
+        credentials: true,
+        origin: "http://localhost:3000",
+    })
+);
+
 
 // const { fail } = require('assert');
 // app.use(cors());
@@ -36,7 +50,7 @@ app.use(bodyParser.urlencoded({
 // });
 // */
 // // Thiết lập Multer để lưu trữ ảnh trong thư mục 'imageproduct'
-app.use(cors());
+
 app.use(router);
 
 app.listen(port, () => {

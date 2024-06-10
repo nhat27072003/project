@@ -40,7 +40,7 @@ const handleAddProduct = async (req, res) => {
 const handleUpdateProducct = async (req, res) => {
 
   let imageUrl = null;
-  console.log(req.file);
+
   // Nếu có file ảnh từ client, tải lên Cloudinary và nhận URL
   if (req.file) {
     const cloudinaryResponse = await cloudinary.uploader.upload(req.file.path);
