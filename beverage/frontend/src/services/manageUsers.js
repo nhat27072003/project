@@ -9,8 +9,14 @@ const getDetailUser = async (userId) => {
   const response = await axios.get(`/detail-user/${userId}`);
   return response;
 }
+
+const authenicateCookie = async () => {
+  const response = await axios.get(`/cookie`);
+  return response;
+}
 const loginUser = async (values) => {
   const response = await axios.post('/login', values);
+  console.log('check res: ', response);
   return response;
 }
 
@@ -35,5 +41,6 @@ export {
   signupUser,
   getDetailUser,
   updateUser,
-  delUser
+  delUser,
+  authenicateCookie
 }

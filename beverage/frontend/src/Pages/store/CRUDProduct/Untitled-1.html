@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f4f4f4;
+      padding: 0;
+      margin: 0;
+    }
+
+    .container {
+      width: 100%;
+      display: flex;
+    }
+
+    .container .product {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 10px;
+      padding: 20px;
+      width: 150px;
+      height: 150px;
+      text-align: center;
+    }
+
+    .card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+    }
+
+    .card .detail {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .card h3 {
+      margin-top: 10px;
+      font-size: 15px;
+      margin-bottom: 0;
+    }
+
+    .card p {
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    .header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .sidebar {
+      background-color: #fff;
+      padding: 20px;
+      width: 200px;
+      margin: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar h2 {
+      margin-bottom: 10px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 5px;
+    }
+
+    .sidebar input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    .footer {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .footer p {
+      margin: 0;
+    }
+
+    .footer a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>ProductManager</h1>
+    <p>Your ultimate product management platform.</p>
+  </div>
+  <div class="container">
+    <div class="sidebar">
+      <h2>Filters</h2>
+      <h3>Category</h3>
+      <ul>
+        <li><input type="checkbox"> Electronics</li>
+        <li><input type="checkbox"> Fashion</li>
+        <li><input type="checkbox"> Home & Kitchen</li>
+        <li><input type="checkbox"> Sports</li>
+      </ul>
+      <h3>Price Range</h3>
+      <h3>Ratings</h3>
+      <ul>
+        <li><input type="checkbox"> Star & Up</li>
+        <li><input type="checkbox"> Stars & Up</li>
+        <li><input type="checkbox"> Stars & Up</li>
+        <li><input type="checkbox"> Stars & Up</li>
+      </ul>
+    </div>
+    <div class="product">
+      <div class="card">
+        <img src="" alt="">
+        <h3>Stylish Smartwatch</h3>
+        <div class="detail">
+          <p>$199.99</p>
+          <p>4.5 Stars</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="" alt="">
+        <h3>Modern Laptop</h3>
+        <div class="detail">
+          <p>$199.99</p>
+          <p>4.5 Stars</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="" alt="">
+        <h3>Running Shoes</h3>
+        <div class="detail">
+          <p>$199.99</p>
+          <p>4.5 Stars</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="" alt="">
+        <h3>Kitchen Knives Set</h3>
+        <div class="detail">
+          <p>$199.99</p>
+          <p>4.5 Stars</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="" alt="">
+        <h3>DSLR Camera</h3>
+        <div class="detail">
+          <p>$199.99</p>
+          <p>4.5 Stars</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="" alt="">
+        <h3>Sports Water Bottle</h3>
+        <div class="detail">
+          <p>$199.99</p>
+          <p>4.5 Stars</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer">
+    <p>&copy; 2023 ProductManager</p>
+    <a href="#">About Us</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="#">Contact</a>
+  </div>
+</body>
+
+</html>

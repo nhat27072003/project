@@ -1,20 +1,25 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import axios from 'axios';
 import './AdProduct.css'
 import hasErrors from './CheckAdd';
 import { addProduct } from '../../../services/manageProduct';
+import { UserContext } from '../../../Context/UserContext';
+import { ShopContext } from '../../../Context/ShopContext';
 
 const AddProduct = () => {
+
+  const { user } = useContext(UserContext);
+  const { getProducts } = useContext(ShopContext);
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
-  const [quantity, setQuantity] = useState('');
+  const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [category, setcategory] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({
     productname: '',
     price: '',
-    quantity: '',
+    description: '',
     image: '',
     category: ''
   });
@@ -43,14 +48,6 @@ const AddProduct = () => {
       newErrors.price = '';
     }
 
-    if (quantity === '') {
-      newErrors.quantity = 'Số lượng không được để trống';
-    } else if (/[^0-9]/.test(quantity) || quantity <= 0) {
-      newErrors.quantity = 'Số lượng không phải một số nguyên dương';
-    } else {
-      newErrors.quantity = '';
-    }
-
     if (!image) {
       newErrors.image = 'Chưa chọn một file ảnh';
     } else {
@@ -66,15 +63,19 @@ const AddProduct = () => {
 
       try {
         const formData = new FormData();
+        formData.append('userId', user.userId);
         formData.append('productName', productName);
         formData.append('price', price);
-        formData.append('quantity', quantity);
+        formData.append('description', description);
         formData.append('category', category);
         formData.append('image', image);
-        console.log(formData);
+        console.log("image:", image);
+
         const response = await addProduct(formData);
-        if (response.EC == 0)
+        if (response.EC === 0) {
+          getProducts();
           alert("Thêm sản phẩm thành công");
+        }
         else
           alert("Lỗi: ", response.EM);
       } catch (error) {
@@ -83,7 +84,7 @@ const AddProduct = () => {
 
       setProductName('');
       setPrice('');
-      setQuantity('');
+      setDescription('');
       setImage(null);
       setImagePreview(null);
       if (imageInputRef.current) {
@@ -110,7 +111,7 @@ const AddProduct = () => {
 
   return (
     <div className='add-product'>
-      <div className='add-product-container'>
+      {/* <div className='add-product-container'>
         <h1>Thêm sản phẩm mới</h1>
         <form action="" onSubmit={handleAddProduct}>
           <div className="add-fields">
@@ -147,6 +148,60 @@ const AddProduct = () => {
             </div>
           </div>
           <button type="submit">Thêm</button>
+        </form>
+      </div> */}
+
+      <div class="container">
+        <h1>Add New Product</h1>
+
+        <div class="back-to-products">
+          <a href="http://localhost:3000/store/manageproducts">← Back to Products</a>
+        </div>
+
+        <form action='' onSubmit={handleAddProduct}>
+          <div class="form-group">
+            <label for="product-name">Product Name:</label>
+            <input type="text" id="product-name" name="productname" placeholder="Enter product name"
+              onChange={(e) => setProductName(e.target.value)} value={productName} />
+            {errors.productname === '' ? null : <span>{errors.productname}</span>}
+          </div>
+
+          <div class="form-group">
+            <label for="product-description">Description:</label>
+            <textarea id="product-description" name="product-description" placeholder="Enter product description"
+              onChange={(e) => setDescription(e.target.value)} value={description}></textarea>
+          </div>
+
+          <div className="form-row">
+            <div class="form-group">
+              <label for="product-price">Price ($):</label>
+              <input type="number" id="product-price" name="price" placeholder="Enter product price"
+                onChange={(e) => setPrice(e.target.value)} value={price} />
+              {errors.price === '' ? null : <span>{errors.price}</span>}
+            </div>
+
+            <div class="form-group">
+              <label for="product-category">Category:</label>
+              <select value={category} onChange={(e) => setcategory(e.target.value)}>
+                <option value="">Chọn loại</option>
+                <option value="tra-sua">Trà Sữa</option>
+                <option value="cafe">Cafe</option>
+                <option value="nuoc-giai-khat">Nước Giải Khát</option>
+              </select>
+              {errors.category === '' ? null : <span>{errors.category}</span>}
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label for="product-image">Upload Image:</label>
+            <input type="file" id="product-image" name="image"
+              onChange={handleImageChange} ref={imageInputRef} />
+            {errors.image === '' ? null : <span>{errors.image}</span>}
+            {imagePreview && <img src={imagePreview} alt="Preview" style={{ marginTop: '10px', width: '100px' }} />}
+          </div>
+
+          <button type="submit">Add Product</button>
         </form>
       </div>
     </div>

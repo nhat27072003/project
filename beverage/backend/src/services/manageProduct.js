@@ -8,10 +8,11 @@ const addProduct = async (values) => {
     await request
       .input('name', sql.NVarChar, values.productName)
       .input('price', sql.Int, parseInt(values.price))
-      .input('quantity', sql.Int, parseInt(values.quantity))
+      .input('description', sql.NVarChar, values.description)
       .input('imageUrl', sql.NVarChar, values.imageUrl)
       .input('category', sql.VarChar, values.category)
-      .query('INSERT INTO Product (name, price, stock, imageUrl, category) VALUES (@name, @price, @quantity, @imageUrl, @category)');
+      .input('userId', sql.Int, values.userId)
+      .query('INSERT INTO Product (name, price, description, imageUrl, category, userId) VALUES (@name, @price, @description, @imageUrl, @category, @userId)');
 
     return {
       EM: "OK",
@@ -40,18 +41,18 @@ const updateProducct = async (values) => {
         .input('productId', sql.Int, parseInt(values.productId))
         .input('productName', sql.NVarChar, values.productName)
         .input('price', sql.Int, parseInt(values.price))
-        .input('quantity', sql.Int, parseInt(values.quantity))
+        .input('description', sql.NVarChar, values.description)
         .input('imageUrl', sql.NVarChar, values.imageUrl)
         .input('category', sql.VarChar, values.category)
-        .query('UPDATE Product SET name = @productName, price = @price, stock = @quantity, imageUrl = @imageUrl, category = @category WHERE productID = @productId');
+        .query('UPDATE Product SET name = @productName, price = @price, description = @description, imageUrl = @imageUrl, category = @category WHERE productID = @productId');
     } else {
       await request
         .input('productId', sql.Int, parseInt(values.productId))
         .input('productName', sql.NVarChar, values.productName)
         .input('price', sql.Int, parseInt(values.price))
-        .input('quantity', sql.Int, parseInt(values.quantity))
+        .input('description', sql.NVarChar, values.description)
         .input('category', sql.VarChar, values.category)
-        .query('UPDATE Product SET name = @productName, price = @price, stock = @quantity, category = @category WHERE productID = @productId');
+        .query('UPDATE Product SET name = @productName, price = @price, description = @description, category = @category WHERE productID = @productId');
     }
 
     return {
@@ -63,7 +64,7 @@ const updateProducct = async (values) => {
     return {
       EM: "server error",
       EC: 1,
-      Dt: []
+      DT: []
     }
   }
 };
@@ -78,7 +79,7 @@ const delProduct = async (productId) => {
       .query('SELECT * FROM Product WHERE productID = @productId');
 
     if (checkProduct.recordset.length === 0) {
-      return res.status(404).json({ EC: 2, EM: 'Product not found', DT: [] });
+      return { EC: 2, EM: 'Product not found', DT: [] };
     }
 
     // Delete the product from SQL Server

@@ -3,19 +3,55 @@ import './Navbar.css'
 import logo from '../Assets/logo.png'
 import cart from '../Assets/cart.png'
 import { Link } from 'react-router-dom'
-import { ShopContext } from '../../Context/ShopContext'
-import { AuthContext } from '../../Pages/AuthProvider'
+import { UserContext } from '../../Context/UserContext'
+import { fectchTotalCart } from '../../services/userCart'
+
+
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");
-  const { getTotalCartItems, total, getCart } = useContext(ShopContext);
-  const { userData, login, logout } = useContext(AuthContext);
-  console.log(userData);
+
+  const { user, logoutContext, getTotalCartItems, total } = useContext(UserContext);
+
+
   useEffect(() => {
-    // Sử dụng useEffect để theo dõi sự thay đổi của total
-    // và cập nhật nó vào state của Navbar
     getTotalCartItems();
-  }, [userData]); // Theo dõi sự thay đổi của total
-  console.log(userData);
+  }, [user]);
+
+
+  const Sidebar = () => {
+    const renderAdminMenu = () => (
+      <ul>
+        <li><Link to='/admin/manageusers' style={{ textDecoration: 'none' }}>Quản lý người dùng</Link></li>
+        <li><Link to='/admin/manageorder' style={{ textDecoration: 'none' }}>Quản lý đơn hàng</Link></li>
+      </ul>
+    );
+
+    const renderStoreMenu = () => (
+      <ul>
+        <li><Link to='/store/manageproducts' style={{ textDecoration: 'none' }}>Quản lý sản phẩm</Link></li>
+        <li><Link to='/store/manageorder' style={{ textDecoration: 'none' }}>Quản lý đơn hàng</Link></li>
+      </ul>
+    );
+
+    const renderCustomerMenu = () => (
+      <ul>
+        <li><Link to='/order' style={{ textDecoration: 'none' }}>Đơn hàng của bạn</Link></li>
+        <li><Link to='/profile' style={{ textDecoration: 'none' }}>Cập nhật thông tin</Link></li>
+      </ul>
+    );
+    console.log("check user:", user);
+    switch (user.role) {
+      case 'admin':
+        return renderAdminMenu();
+      case 'store':
+        return renderStoreMenu();
+      case 'user':
+        return renderCustomerMenu();
+      default:
+        return null;
+    }
+  }
+
   return (
     <div className='navbar'>
       <Link to='/' style={{ textDecoration: 'none' }}>
@@ -31,26 +67,26 @@ const Navbar = () => {
         <li onClick={() => { setMenu("nuocgiaikhat") }}><Link style={{ textDecoration: 'none', color: 'black' }} to='/nuocgiaikhat'>Nước giải khát</Link>{menu === "nuocgiaikhat" ? <hr /> : <></>}</li>
       </ul>
       <div className="nav-login-cart">
-        {userData === 'admin' ? (
-          // <ul className='admin'>
-          //   <li onClick={() => { setMenu("") }}><Link to='/admin/crudproduct' style={{ textDecoration: 'none' }}><button>Quản lý sản phẩm</button></Link></li>
-          //   <li onClick={() => { setMenu("") }}><Link to='/admin/manageorder' style={{ textDecoration: 'none' }}><button>Quản lý đơn hàng</button></Link></li>
-          //   <li onClick={() => { logout(); setMenu("shop") }}><Link to='/login' style={{ textDecoration: 'none' }}><button>Đăng xuất</button></Link></li>
-          // </ul>
-          <>
-            <div className="right-sidebar">
-              <input type="checkbox" id="check" placeholder='i' />
+        {user.role !== 'admin' ? <>
+          <Link to='/cart' style={{ textDecoration: 'none', }} onClick={() => { setMenu("") }}><img src={cart} alt="" /></Link>
+          <div className="nav-cart-count">{total}</div>
+        </> :
+          <></>
+        }
+        {
+          user.role ?
+            <><div className="right-sidebar">
+              <input type="checkbox" id="check" />
               <div className="btn-one">
                 <label htmlFor="check">
-                  <i class='bx bxs-user-circle'></i>
+                  <i className='bx bxs-user-circle'></i>
                 </label>
               </div>
               <div className="sidebar-menu">
                 <div className="menu-title">
-                  <i class='bx bxs-user-circle'></i>
-
-                  <span>{userData}</span>
-                  <Link to='/' onClick={() => { logout(); setMenu("") }}>Đăng xuất</Link>
+                  <i className='bx bxs-user-circle'></i>
+                  <span>{user.username}</span>
+                  <Link to='/' onClick={() => { logoutContext(); setMenu("") }}>Đăng xuất</Link>
                 </div>
                 <div className="btn-two">
                   <label htmlFor="check">
@@ -58,56 +94,20 @@ const Navbar = () => {
                   </label>
                 </div>
                 <div className="menu">
-                  <ul>
-                    <li><Link to='/order' style={{ textDecoration: 'none' }} onClick={() => { setMenu("") }}>Thông báo</Link></li>
-                    <li><Link to='/admin/manageusers' style={{ textDecoration: 'none' }}>Quản lý người dùng</Link></li>
-                    <li><Link to='/admin/manageorder' style={{ textDecoration: 'none' }}>Quản lý đơn hàng</Link></li>
-                    <li><Link to='/' style={{ textDecoration: 'none' }}>Đăng xuất</Link></li>
-                  </ul>
+                  {Sidebar()}
                 </div>
               </div>
             </div>
-          </>
-        )
-          : userData === '' ?
-            <>
-              <Link to='/login' style={{ textDecoration: 'none' }} onClick={() => { setMenu("") }}><button>Đăng nhập</button></Link>
-              <Link to='/cart' style={{ textDecoration: 'none' }} onClick={() => { setMenu("") }}><img src={cart} alt="" /></Link>
-              <div className="nav-cart-count">{total}</div>
             </>
-            :
-            <>
-              <Link to='/cart' style={{ textDecoration: 'none' }} onClick={() => { setMenu("") }}><img src={cart} alt="" /></Link>
-              <div className="nav-cart-count">{total}</div>
-              <div className="right-sidebar">
-                <input type="checkbox" id="check" placeholder='i' />
-                <div className="btn-one">
-                  <label htmlFor="check">
-                    <i class='bx bxs-user-circle'></i>
-                  </label>
-                </div>
-                <div className="sidebar-menu">
-                  <div className="menu-title">
-                    <i class='bx bxs-user-circle'></i>
+            : <><Link to='/login' style={{ textDecoration: 'none', display: user.role ? 'none' : 'block' }} onClick={() => { setMenu("") }}><button>Đăng nhập</button></Link></>
+        }
 
-                    <span>{userData}</span>
-                    <Link to='/' onClick={() => { logout(); setMenu("") }}>Đăng xuất</Link>
-                  </div>
-                  <div className="btn-two">
-                    <label htmlFor="check">
-                      <i class='bx bxs-tag-x'></i>
-                    </label>
-                  </div>
-                  <div className="menu">
-                    <ul>
-                      <li><Link to='/order' style={{ textDecoration: 'none' }} onClick={() => { setMenu("") }}>Thông báo</Link></li>
-                      <li><Link to='/order' style={{ textDecoration: 'none' }} onClick={() => { setMenu("") }}>Đơn hàng của bạn</Link></li>
-                      <li><Link to='/order' style={{ textDecoration: 'none' }} onClick={() => { setMenu("") }}>Cập nhật thông tin</Link></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </>
+        {
+          // <ul className='admin'>
+          //   <li onClick={() => { setMenu("") }}><Link to='/admin/crudproduct' style={{ textDecoration: 'none' }}><button>Quản lý sản phẩm</button></Link></li>
+          //   <li onClick={() => { setMenu("") }}><Link to='/admin/manageorder' style={{ textDecoration: 'none' }}><button>Quản lý đơn hàng</button></Link></li>
+          //   <li onClick={() => { logout(); setMenu("shop") }}><Link to='/login' style={{ textDecoration: 'none' }}><button>Đăng xuất</button></Link></li>
+          // </ul>
         }
 
       </div>

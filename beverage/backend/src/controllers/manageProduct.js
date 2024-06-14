@@ -1,6 +1,4 @@
 const cloudinary = require('../config/cloudinary');
-const { pool, sql } = require('../config/database');
-const upload = require('../config/saveImage');
 const { delProduct, addProduct, updateProducct } = require('../services/manageProduct');
 
 
@@ -8,19 +6,25 @@ const handleAddProduct = async (req, res) => {
 
   let imageUrl = null;
   // Nếu có file ảnh từ client, tải lên Cloudinary và nhận URL
+  console.log('File:', req.file);
+  console.log('Body:', req.body);
   if (req.file) {
+    console.log("come here");
     const cloudinaryResponse = await cloudinary.uploader.upload(req.file.path);
     imageUrl = cloudinaryResponse.secure_url;
   }
 
-  if (req.body.productName && req.body.price && req.body.quantity && req.body.category) {
+  if (req.body.productName && req.body.price && req.body.description && req.body.category && req.body.userId) {
     const values = {
       productName: req.body.productName,
       price: req.body.price,
-      quantity: req.body.quantity,
+      description: req.body.description,
       category: req.body.category,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+      userId: req.body.userId
     }
+
+    console.log(values);
     const result = await addProduct(values);
 
     res.status(200).json({
@@ -40,7 +44,7 @@ const handleAddProduct = async (req, res) => {
 const handleUpdateProducct = async (req, res) => {
 
   let imageUrl = null;
-  console.log(req.file);
+
   // Nếu có file ảnh từ client, tải lên Cloudinary và nhận URL
   if (req.file) {
     const cloudinaryResponse = await cloudinary.uploader.upload(req.file.path);
@@ -50,7 +54,7 @@ const handleUpdateProducct = async (req, res) => {
     productId: req.params.productId,
     productName: req.body.productName,
     price: req.body.price,
-    quantity: req.body.quantity,
+    description: req.body.description,
     imageUrl: imageUrl,
     category: req.body.category,
   }
@@ -66,7 +70,8 @@ const handleUpdateProducct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   if (req.params.productId) {
     const productId = req.params.productId;
-    const result = delProduct(productId);
+    const result = await delProduct(productId);
+    console.log("check delete", result);
     res.status(200).json({
       EM: result.EM,
       EC: result.EC,

@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './CSS/Login.css';
 import LoginValidation from './LoginValidation';
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthProvider';
 import { ShopContext } from '../Context/ShopContext';
 import { loginUser } from '../services/manageUsers';
+import { UserContext } from '../Context/UserContext';
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -13,11 +13,11 @@ const Login = () => {
     password: ""
   });
 
-  const { userData, login, logout } = useContext(AuthContext);
+  const { user, loginContext, getCart } = useContext(UserContext);
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const { getCart } = useContext(ShopContext);
+
   const handleInput = (event) => {
     const { name, value } = event.target;
     setValues(prev => ({ ...prev, [name]: value }));
@@ -32,17 +32,13 @@ const Login = () => {
     // Kiểm tra lỗi sau khi cập nhật errors
     if (Object.values(validationErrors).every((error) => error === '')) {
       const result = await loginUser(values);
-      if (result.EC === 0 && values.username === "admin") {
-        login('admin');
+      if (result.EC === 0) {
+        loginContext({ username: result.DT.username, role: result.DT.role, userId: result.DT.userId });
         navigate('/');
         getCart();
-        console.log(values.username);
-      } else if (result.EC === 0) {
-        login(values.username);
-        navigate('/');
-      } else {
-        login('');
-        alert("username và mật khẩu không đúng");
+      }
+      else {
+        alert("username hoặc mật khẩu không đúng");
       }
     }
   }

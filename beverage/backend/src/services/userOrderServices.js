@@ -94,7 +94,6 @@ const getOrder = async (username) => {
 const updateOrder = async (orderID) => {
   try {
     await pool.connect();
-    console.log(orderID);
     const result = await pool.request()
       .input('orderID', sql.Int, orderID)
       .query('update Orders SET status = 1 WHERE orderID = @orderID');

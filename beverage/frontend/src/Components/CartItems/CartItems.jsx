@@ -2,20 +2,18 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../../Context/ShopContext'
 import './CartItems.css'
 import remove_icon from '../Assets/cart_cross_icon.png'
-import axios from 'axios'
-import { AuthContext } from '../../Pages/AuthProvider'
 import { Link } from 'react-router-dom'
-import { delItemCart } from '../../services/userCart'
+import { delItemCart, fetchCart } from '../../services/userCart'
 import { createOrder } from '../../services/userOrder'
+import { UserContext } from '../../Context/UserContext'
 
 const CartItems = () => {
-    const { getCart, cartItems, removeFromCart, getPopular, getTotalCartItems } = useContext(ShopContext);
+    const { getPopular, getTotalCartItems } = useContext(ShopContext);
+    const { getCart, cartItems, handleDelete } = useContext(UserContext);
     const [total_sum, setTotal_sum] = useState(0);
-    const [cart, setCart] = useState([]);
-    const { userData } = useContext(AuthContext);
-    const [address, setAddress] = useState('');
 
-    console.log(cartItems);
+    const [address, setAddress] = useState('');
+    const { user } = useContext(UserContext);
 
     const handleInput = (event) => {
         setAddress(event.target.value);
@@ -29,19 +27,12 @@ const CartItems = () => {
     useEffect(() => {
         getCart();
     }, []);
-    const handleDelete = async (productId) => {
-        console.log({ username: userData, id: productId });
-        const result = await delItemCart({ username: userData, id: productId });
-        if (result.EC === 0) {
-            getCart();
-            getTotalCartItems();
-        }
-    }
+
     const handleCreateOrder = async (sum) => {
         if (cartItems.length <= 0)
             alert("Không có sản phẩm nào trong giỏ hàng");
         else {
-            const values = { username: userData, total: sum, products: cartItems, address: address };
+            const values = { username: user.username, total: sum, products: cartItems, address: address };
             const response = await createOrder(values);
             if (response.EC === 0) {
                 alert("Đặt hàng thành công");
@@ -55,7 +46,7 @@ const CartItems = () => {
         }
     }
 
-
+    console.log('check items: ', cartItems);
     return (
         <div className='cartitems'>
             <div className="cartitems-format-main">
