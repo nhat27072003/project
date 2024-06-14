@@ -1,0 +1,263 @@
+/*
+.crud-product{
+    width: 100%;
+    height: 90vh;
+    background: #fce3fe;
+    padding-top: 50px;
+    margin-bottom: 20px;
+}
+.crud-container{
+    width: 580px;
+    background: white;
+    margin: auto;
+    padding: 40px 60px;
+    border-radius: 20px;
+}
+.table thead{
+    
+}
+.table tbody img{
+    width: 50px;
+}
+.crud-container button{
+    width: 80px;
+    height: 50px;
+    font-size: 20px;
+    border-radius: 10px;
+    background: #9bffa4;
+    border: none;
+    cursor: pointer;
+}
+*/
+
+.crud-product {
+    width: 100%;
+    min-height: 100vh;
+    background: #f4f4f4;
+    padding-top: 20px;
+    margin-bottom: 0;
+}
+
+/* .crud-container {
+    width: 1000px;
+    background: white;
+    margin: auto;
+    padding: 25px 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table thead th,
+.table tbody td {
+    font-size: 18px;
+    padding: 5px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+.option-select{
+    display: flex;
+    flex-direction: column;
+}
+.table tbody img {
+    width: 70px;
+}
+.table select {
+    border-radius: 10px;
+    outline: none;
+    margin-left: 5px;
+}
+
+.crud-container button {
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.add-btn {
+    width: 80px;
+    height: 50px;
+    background: #48c24c;
+    color: white;
+    margin-bottom: 20px;
+}
+.add-btn:hover{
+    background: #5bca5f;
+}
+.action-btn {
+    margin-right: 8px;
+    border: none;
+    border-radius: 4px;
+    gap: 10px;
+    display: flex;
+}
+
+.update-btn {
+    background: #3498db;
+    color: white;
+    padding: 5px 10px;
+    margin-right: 10px;
+}
+.update-btn:hover{
+    background: #74b6e2;
+}
+.delete-btn {
+    background: #e74c3c;
+    color: white;
+    padding: 5px 10px;
+}
+.delete-btn:hover{
+    background: #eb786c;
+} */
+
+.crud-product .manage-product {
+    background: #f4f4f4;
+    min-height: 595px;
+}
+
+.crud-product .container {
+    width: 100%;
+    display: flex;
+}
+
+.crud-product .container .product {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.crud-product .product-cart {
+    position: relative;
+}
+
+.crud-product .card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 20px;
+    width: 200px;
+    height: 170px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.crud-product .card:hover {
+    background: #ffffffa3;
+}
+
+.crud-product .product-cart .bx-minus-circle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    color: #ff4141;
+    cursor: pointer;
+    z-index: 4;
+}
+
+.crud-product .product-cart .bx-minus-circle:hover {
+    transform: scale(0.97);
+}
+
+.crud-product .card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+}
+
+.crud-product .card .detail {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.crud-product .card h3 {
+    margin-top: 10px;
+    font-size: 14px;
+    margin-bottom: 0;
+    font-weight: 500;
+    color: #333;
+}
+
+.crud-product .card p {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #333;
+    background: #f4f4f4;
+    padding: 10px;
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+.crud-product .header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.crud-product .header h1 {
+    margin: 0;
+}
+
+.crud-product .sidebar {
+    background-color: #fff;
+    padding: 20px;
+    width: 200px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.crud-product .sidebar h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.crud-product .sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.crud-product .sidebar li {
+    margin-bottom: 5px;
+}
+
+.crud-product .sidebar input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.crud-product .new-product {
+    background-color: #fff;
+    padding: 20px;
+    width: 200px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.crud-product .new-product h2 {
+    margin-bottom: 10px;
+}
+
+.crud-product .add-btn {
+    font-size: 16px;
+    padding: 8px 16px;
+    outline: none;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    background: #f4f4f4;
+}
+
+.crud-product .add-btn:hover {
+    background: #d1d1d1;
+}

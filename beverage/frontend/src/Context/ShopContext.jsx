@@ -38,14 +38,7 @@ const ShopContextProvider = ({ children }) => {
   // }, []);
 
 
-  // const addToCart = async (props) => {
-  //   const values = {
-  //     userData: userData,
-  //     productID: props
-  //   };
 
-  //   await addItemCart(values);
-  // }
 
   // const getCart = async () => {
   //   if (userData !== 'admin' && userData !== '') {

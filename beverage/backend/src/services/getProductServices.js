@@ -53,7 +53,7 @@ const getDetailProduct = async (productId) => {
     await pool.connect();
     const request = pool.request();
 
-    const query = `SELECT name, price, stock, category, imageURL FROM Product WHERE productID = @productId`;
+    const query = `SELECT * FROM Product WHERE productID = @productId`;
 
     const result = await request
       .input('productId', sql.Int, parseInt(productId))
@@ -62,7 +62,7 @@ const getDetailProduct = async (productId) => {
     return {
       EC: 0,
       EM: "OK",
-      DT: result.recordset
+      DT: result.recordset[0]
     };
   }
   catch (error) {

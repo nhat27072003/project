@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import './CSS/Signup.css';
 import { Link, useNavigate } from 'react-router-dom';
 import SignupValidation from './SignupValidation';
@@ -31,7 +30,7 @@ const Signup = () => {
         alert('Đăng ký tài khoản thành công');
         navigate('/login');
       } else {
-        alert('User đã tồn tại');
+        alert(res.EM);
       }
     }
   };

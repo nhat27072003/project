@@ -1,7 +1,7 @@
 const { getRole, getUrl } = require("../services/accountServices");
 const { verifyToken } = require("./JWTAction")
 
-const publicRouter = ['/acount', '/login', '/product', '/popular', '/cookie'];
+const publicRouter = ['/acount', '/login', '/sign', '/product', '/popular', '/cookie'];
 const productRegex = /^\/product\/\d+$/;
 
 
@@ -35,7 +35,7 @@ const authenicateUser = async (req, res, next) => {
       else {
         res.status(401).json({
           EC: 401,
-          EM: "you don't have permission",
+          EM: "error authenicate!",
           DT: []
         })
       }

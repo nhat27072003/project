@@ -4,15 +4,19 @@ import logo from '../Assets/logo.png'
 import cart from '../Assets/cart.png'
 import { Link } from 'react-router-dom'
 import { UserContext } from '../../Context/UserContext'
+import { fectchTotalCart } from '../../services/userCart'
+
+
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");
-  // const { getTotalCartItems, total } = useContext(ShopContext);
-  const { user, logoutContext } = useContext(UserContext);
 
-  console.log('check user', user);
-  // useEffect(() => {
-  //   getTotalCartItems();
-  // }, [user]);
+  const { user, logoutContext, getTotalCartItems, total } = useContext(UserContext);
+
+
+  useEffect(() => {
+    getTotalCartItems();
+  }, [user]);
+
 
   const Sidebar = () => {
     const renderAdminMenu = () => (
@@ -35,7 +39,7 @@ const Navbar = () => {
         <li><Link to='/profile' style={{ textDecoration: 'none' }}>Cập nhật thông tin</Link></li>
       </ul>
     );
-    console.log(user.role);
+    console.log("check user:", user);
     switch (user.role) {
       case 'admin':
         return renderAdminMenu();
@@ -63,7 +67,12 @@ const Navbar = () => {
         <li onClick={() => { setMenu("nuocgiaikhat") }}><Link style={{ textDecoration: 'none', color: 'black' }} to='/nuocgiaikhat'>Nước giải khát</Link>{menu === "nuocgiaikhat" ? <hr /> : <></>}</li>
       </ul>
       <div className="nav-login-cart">
-        <Link to='/cart' style={{ textDecoration: 'none', }} onClick={() => { setMenu("") }}><img src={cart} alt="" /></Link>
+        {user.role !== 'admin' ? <>
+          <Link to='/cart' style={{ textDecoration: 'none', }} onClick={() => { setMenu("") }}><img src={cart} alt="" /></Link>
+          <div className="nav-cart-count">{total}</div>
+        </> :
+          <></>
+        }
         {
           user.role ?
             <><div className="right-sidebar">

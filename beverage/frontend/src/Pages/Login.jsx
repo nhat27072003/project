@@ -13,11 +13,10 @@ const Login = () => {
     password: ""
   });
 
-  const { user, loginContext } = useContext(UserContext);
+  const { user, loginContext, getCart } = useContext(UserContext);
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const { getCart } = useContext(ShopContext);
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -34,7 +33,7 @@ const Login = () => {
     if (Object.values(validationErrors).every((error) => error === '')) {
       const result = await loginUser(values);
       if (result.EC === 0) {
-        loginContext({ username: result.DT.username, role: result.DT.role });
+        loginContext({ username: result.DT.username, role: result.DT.role, userId: result.DT.userId });
         navigate('/');
         getCart();
       }

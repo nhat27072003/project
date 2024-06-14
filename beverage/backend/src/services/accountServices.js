@@ -47,7 +47,7 @@ const getUrl = async (username) => {
 }
 const getAccount = async (username, password) => {
   try {
-    var sqlstring = "SELECT email, password FROM Users WHERE username= @username ";
+    var sqlstring = "SELECT email, password, userID FROM Users WHERE username= @username ";
     await pool.connect();
     const result = await pool.request()
       .input('username', sql.VarChar, username)
@@ -56,7 +56,7 @@ const getAccount = async (username, password) => {
     if (result.recordset.length < 0) {
       return {
         EC: 3,
-        EM: "fail login",
+        EM: "Not find user!",
         DT: []
       };
     }
@@ -68,7 +68,8 @@ const getAccount = async (username, password) => {
           email: result.recordset[0].email,
           username: username,
           role: role,
-          url
+          url,
+          userId: result.recordset[0].userID
         }
         let token = createToken(payload);
         return {
@@ -76,23 +77,26 @@ const getAccount = async (username, password) => {
           EM: 'OK',
           DT: {
             access_token: token,
-            role
+            role,
+            username: username,
+            userId: result.recordset[0].userID
           }
         };
       }
       else {
         return {
           EC: 3,
-          EM: "fail login",
+          EM: "Incorect Password",
           DT: []
         }
       }
     }
   }
   catch (error) {
+    console.log(error);
     return {
       EC: 3,
-      EM: "fail login",
+      EM: "error database",
       DT: []
     }
   }
@@ -108,9 +112,9 @@ const signAccount = async (user) => {
   if (checkUser.recordset.length <= 0) {
 
     const sqlstring = `DECLARE @InsertedData TABLE (UserID INT) 
-        INSERT INTO Users (username, email, password) 
+        INSERT INTO Users (username, email, password,role) 
         OUTPUT INSERTED.UserID INTO @InsertedData
-        VALUES (@username, @email, @password);
+        VALUES (@username, @email, @password, 3);
         
         DECLARE @UserID INT;
         SELECT @UserID = UserID FROM @InsertedData;
@@ -125,9 +129,17 @@ const signAccount = async (user) => {
       .input('password', sql.VarChar, hassPass)
       .query(sqlstring);
 
-    return true;
+    return {
+      EC: 0,
+      EM: "OK",
+      DT: ''
+    };
   }
-  else return false;
+  else return {
+    EC: 5,
+    EM: "User already exist",
+    DT: ''
+  };
 }
 const getCookie = async (cookie) => {
   const decoded = await verifyToken(cookie);
@@ -138,7 +150,8 @@ const getCookie = async (cookie) => {
       DT: {
         user: {
           username: decoded.username,
-          role: decoded.role
+          role: decoded.role,
+          userId: decoded.userId
         },
         isauthenicated: true
       }
@@ -153,6 +166,7 @@ const getCookie = async (cookie) => {
         user: {
           username: '',
           role: '',
+          userId: ''
         }
       }
     }

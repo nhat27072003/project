@@ -20,6 +20,7 @@ const handleLogin = async (req, res) => {
     if (result.EC === 0) {
       res.cookie('jwt', result.DT.access_token, { httpOnly: true });
     }
+
     res.status(200).json({
       EC: result.EC,
       EM: result.EM,
@@ -41,16 +42,19 @@ const handleSignAccount = async (req, res) => {
       email: req.body.email,
       password: req.body.password
     }
-    if (signAccount(user)) {
-      res.json({ success: true });
-    } else {
-      res.json({ success: false });
-    }
+    const result = await signAccount(user);
+
+    res.status(200).json({
+      EC: result.EC,
+      EM: result.EM,
+      DT: result.DT
+    })
   }
 };
 const handleGetCookie = async (req, res) => {
   if (req.cookies && req.cookies.jwt) {
     const result = await getCookie(req.cookies.jwt);
+    console.log(result);
     res.status(200).json({
       EC: result.EC,
       EM: result.EM,
