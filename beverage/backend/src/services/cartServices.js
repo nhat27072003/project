@@ -94,16 +94,34 @@ const getTotalCart = async (username) => {
 const getCart = async (username) => {
   try {
     await pool.connect();
-    const sqlstring = `SELECT p.productID,p.imageUrl,p.name,p.price,cp.quantity,p.price*cp.quantity as sum
-                      FROM
-                        CartProduct cp
-                        JOIN Cart c ON c.cartID = cp.cartID
-                        JOIN Users u ON u.userID = c.userID
-                        JOIN Product p on cp.productID=p.productID
-                      WHERE
-                        u.username = @username
-                      GROUP BY
-                        cp.quantity, p.name,p.price,p.imageUrl,p.productID`;
+    const sqlstring = `SELECT 
+          u.name AS username,
+          p.productID,
+          p.userId AS storeId,
+          p.imageUrl,
+          p.name AS product_name,
+          p.price,
+          cp.quantity,
+          p.price * cp.quantity AS sum,
+          store.name AS store_name
+      FROM
+          CartProduct cp
+          JOIN Cart c ON c.cartID = cp.cartID
+          JOIN Users u ON u.userID = c.userID
+          JOIN Product p ON cp.productID = p.productID
+          JOIN Users store ON p.userId = store.userID
+      WHERE
+          u.username = @username
+      GROUP BY
+          u.name,
+          p.productID,
+          p.userId,
+          p.imageUrl,
+          p.name,
+          p.price,
+          cp.quantity,
+          store.name
+      `;
 
     const result = await pool.request()
       .input('username', sql.VarChar, username)

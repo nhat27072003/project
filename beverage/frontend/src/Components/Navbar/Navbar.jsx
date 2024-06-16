@@ -30,6 +30,8 @@ const Navbar = () => {
       <ul>
         <li><Link to='/store/manageproducts' style={{ textDecoration: 'none' }}>Quản lý sản phẩm</Link></li>
         <li><Link to='/store/manageorder' style={{ textDecoration: 'none' }}>Quản lý đơn hàng</Link></li>
+        <li><Link to='/order' style={{ textDecoration: 'none' }}>Đơn hàng của bạn</Link></li>
+        <li><Link to='/profile' style={{ textDecoration: 'none' }}>Cập nhật thông tin</Link></li>
       </ul>
     );
 

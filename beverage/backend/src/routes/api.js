@@ -4,7 +4,7 @@ const { handleSignAccount, handleLogin, handleGetCookie } = require('../controll
 const { handleGetDetailProduct, handleGetAllProduct, handleGetPopular } = require('../controllers/getProduct');
 const { deleteProduct, handleUpdateProducct, handleAddProduct } = require('../controllers/manageProduct');
 const { handleAddCart, handleGetTotalCart, handleGetCart, handleDeleteCart } = require('../controllers/manageCart');
-const { handleAdminOrder } = require('../controllers/manageOrder');
+const { handleManageOrder, handleStoreUpdateOrder } = require('../controllers/manageOrder');
 const { handleCreateOrder, handleGetOrder, handleUpdateOrder } = require('../controllers/userOrder');
 const { handleGetUsers, getDetailUser, handleUpdateUser, handleDeleteUser, handleGetAllAccount } = require('../controllers/manageUser');
 const upload = require('../config/saveImage');
@@ -52,14 +52,16 @@ router.delete('/deleteproduct/:productId', deleteProduct);
 
 
 //manage Cart
+router.get('/getcart', handleGetCart);
+
 router.post('/cart', handleAddCart);
 
 router.get('/totalquantity', handleGetTotalCart);
 
-router.get('/getcart', handleGetCart);
-
 router.delete('/deleteitem', handleDeleteCart);
 
+//user order
+router.get('/order', handleGetOrder);
 
 //manage Order
 router.post('/createorder', handleCreateOrder);
@@ -68,7 +70,9 @@ router.get('/order', handleGetOrder);
 
 router.put('/order/:orderID', handleUpdateOrder);
 
-router.get('/admin/orders', handleAdminOrder);
+router.put('/store/order/update', handleStoreUpdateOrder);
+
+router.get('/store/orders', handleManageOrder);
 
 
 

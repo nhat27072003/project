@@ -3,22 +3,28 @@ const { pool, sql } = require('../config/database')
 const createOrder = async (userOrder) => {
   try {
     await pool.connect();
+    //check user
     const user = await pool.request()
       .input('username', sql.VarChar, userOrder.username)
       .query('select Users.userID from Users where Users.username = @username');
 
     if (user.recordset.length > 0) {
       const userID = user.recordset[0].userID;
+      //create order
       await pool.request()
         .input('userID', sql.Int, userID)
         .input('total', sql.Int, userOrder.total)
         .input('address', sql.NVarChar, userOrder.address)
-        .query(`insert into Orders (userID, status, sum, address) values(@userID,0,@total,@address)`);
+        .input('phone', sql.VarChar, userOrder.phone)
+        .input('storeId', sql.Int, userOrder.storeId)
+        .query(`insert into Orders (userID, status, sum, address,phone,storeId) values(@userID,1,@total,@address, @phone,@storeId)`);
 
+      //get orderId
       const order = await pool.request()
         .input('userID', sql.Int, userID)
         .query('select top 1 orderID from Orders where userID = @userID order by orderID desc');
 
+      //add item order
       if (order.recordset.length > 0) {
         const orderID = order.recordset[0].orderID;
         for (const product of userOrder.products) {
@@ -65,18 +71,18 @@ const createOrder = async (userOrder) => {
     }
   }
 }
-const getOrder = async (username) => {
+const getOrder = async (userId) => {
   try {
     await pool.connect();
-    const sqlstring = `SELECT o.orderID, o.status, o.sum ,o.address,o.orderDate, op.oderProductID, op.quantity, op.priceProduct,p.*
+    const sqlstring = `SELECT o.orderID, o.status, o.sum ,o.address, o.phone,o.orderDate, op.oderProductID, op.quantity, op.priceProduct,p.*
                     FROM Orders o
                     JOIN Users u ON u.userID = o.userID
                     JOIN OrderProduct op ON o.orderID = op.orderID
                     Join Product p ON p.productID = op.productID
-                    WHERE u.username = @username`
+                    WHERE u.userID = @userId`
 
     const result = await pool.request()
-      .input('username', sql.VarChar, username)
+      .input('userId', sql.Int, userId)
       .query(sqlstring)
     return {
       EM: "OK",

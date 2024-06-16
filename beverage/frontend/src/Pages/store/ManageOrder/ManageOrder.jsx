@@ -1,29 +1,39 @@
 // ManageOrder.js
-import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useContext, useEffect, useId, useState } from 'react';
 import './ManageOrder.css'; // Import file CSS để tùy chỉnh giao diện
 import { Link } from 'react-router-dom';
 import search_icon from '../../../Components/Assets/search-icon.png'
-import { AuthContext } from '../../AuthProvider';
-import { getOrders } from '../../../services/manageOrder';
-
-const ManageOrder = ({ username }) => {
-  const { userData } = useContext(AuthContext);
+import { confirmOrder, getOrders } from '../../../services/manageOrder';
+import { UserContext } from '../../../Context/UserContext';
+const ManageOrder = () => {
   const [searchTerm, setSearchTerm] = useState("");
   // Tạo state để lưu trữ groupedOrdersArray
   const [groupedOrdersArray, setGroupedOrdersArray] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState(false);
+
   const [orders, setOrders] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState(1);
+  const status = ['', 'Chờ xác nhận', 'Đã xác nhận', 'Đang giao', 'Đã giao'];
+  const { user } = useContext(UserContext);
+
+  const handleStatus = async (orderID) => {
+    // const result = await putOrder(orderID);
+    // if (result.EC === 0)
+    //   await getOrders();
+  }
+  const fetchOrders = async () => {
+    if (user.userId) {
+      console.log('check id', user.userId)
+      const result = await getOrders(user.userId);
+      if (result.EC === 0) {
+        setOrders(result.DT);
+      }
+    }
+  };
   useEffect(() => {
     // Gọi API để lấy danh sách tất cả đơn hàng từ server (không cần phải truyền username)
-    const fetchOrders = async () => {
-      const data = await getOrders();
-      setOrders(data);
-    };
-
     fetchOrders();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     // Tạo một đối tượng để nhóm đơn hàng theo orderID
@@ -38,7 +48,8 @@ const ManageOrder = ({ username }) => {
           orderDate: new Date(order.orderDate).toLocaleString(),
           username: order.username,
           products: [],
-          address: order.address
+          address: order.address,
+          phone: order.phone
         };
       }
 
@@ -90,36 +101,42 @@ const ManageOrder = ({ username }) => {
     setFilteredProducts(filterOrdersByStatus(selectedStatus));
   }, [groupedOrdersArray]);
 
+  const handleConfirm = async (orderID, status) => {
+    const result = await confirmOrder(orderID, status);
+    if (result.EC === 0) {
+      fetchOrders();
+    }
+  }
   return (
-    <div className="order-list-container">
-      <div className="head">
-        <h2>Danh sách đơn hàng</h2>
-        <div className="shopcategory-search">
-          <label><img src={search_icon} alt="" /></label>
-          <input
-            type="text"
-            placeholder=' Nhập username'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button onClick={handleSearch}>Search</button>
-        </div>
-      </div>
+    <div className="store-order-list-container">
+      <h2>Quản lý Đơn hàng</h2>
       <div className="order">
         <div className="order-main">
-          <button onClick={() => handleTabClick(false)} style={{ background: selectedStatus === false ? 'white' : '', border: selectedStatus === false ? '' : 'none' }}>Chưa hoàn thành</button>
-          <button onClick={() => handleTabClick(true)} style={{ background: selectedStatus === true ? 'white' : '', border: selectedStatus === true ? '' : 'none' }}>Đã hoàn thành</button>
+          <button onClick={() => handleTabClick(1)} style={{ background: selectedStatus === 1 ? '#c7c7c7' : '' }}>{status[1]}</button>
+          <button onClick={() => handleTabClick(2)} style={{ background: selectedStatus === 2 ? '#c7c7c7' : '' }}>{status[2]}</button>
+          <button onClick={() => handleTabClick(3)} style={{ background: selectedStatus === 3 ? '#c7c7c7' : '' }}>{status[3]}</button>
+          <button onClick={() => handleTabClick(4)} style={{ background: selectedStatus === 4 ? '#c7c7c7' : '' }}>{status[4]}</button>
         </div>
         <ul className="order-list">
-          {filteredProducts.map((order) => (
+          {filterOrdersByStatus(selectedStatus).map((order) => (
             <li key={order.orderID} className="order-items">
               <div className="left">
                 <p className="order-info">Mã đơn hàng #{order.orderID}</p>
-                <p className="order-info">Người đặt hàng: {order.username}</p>
                 <p className="order-info">Ngày đặt hàng: {order.orderDate}</p>
-                <p className="order-info">Tổng giá trị: <span>{order.sum} .000vnđ</span></p>
+                <p className='order-info'>Người đặt hàng: {order.username}</p>
                 <p className='order-info'>Địa chỉ: {order.address}</p>
-                <p className='order-info'>Trạng thái:{order.status == false ? <span>Chưa hoàn thành</span> : <span>Đã hoàn thành</span>} </p>
+                <p className='order-info'>Số điện thoại: {order.phone}</p>
+                <p className="order-info">Tổng đơn hàng: <span>{order.sum} .000vnđ</span></p>
+                <p className='order-info'>Trạng thái: <span>{status[order.status]}</span></p>
+                {selectedStatus === 1 && (
+                  <button onClick={() => handleConfirm(order.orderID, 2)}>Xác nhận</button>
+                )}
+                {selectedStatus === 2 && (
+                  <button onClick={() => handleConfirm(order.orderID, 3)}>Đang giao</button>
+                )}
+                {selectedStatus === 3 && (
+                  <button onClick={() => handleConfirm(order.orderID, 4)}>Đã nhận</button>
+                )}
               </div>
               <table className="right">
                 {order.products.map((product) => (

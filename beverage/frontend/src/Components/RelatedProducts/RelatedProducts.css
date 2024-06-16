@@ -1,4 +1,4 @@
-.relatedproducts{
+/* .relatedproducts{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -20,4 +20,58 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-  }
+  } */
+
+.featured-beverages {
+    padding: 2rem;
+    margin-top: 2rem;
+    background: #f4f4f4;
+}
+
+.featured-beverages h3 {
+    margin-bottom: 1rem;
+}
+
+.featured-beverages .beverage-list {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.featured-beverages .beverage-item {
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    cursor: pointer;
+    flex: 1 1 200px;
+    max-width: 200px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideIn 0.5s forwards;
+    animation-delay: calc(0.1s * var(--item-index));
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.featured-beverages .beverage-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.featured-beverages .beverage-item button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+}

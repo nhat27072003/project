@@ -1,10 +1,14 @@
 const { createOrder, getOrder, updateOrder } = require('../services/userOrderServices');
+
+
 const handleCreateOrder = async (req, res) => {
   const order = {
     username: req.body.username,
     total: req.body.total,
     address: req.body.address,
     products: req.body.products,
+    phone: req.body.phone,
+    storeId: req.body.storeId
   }
 
   const result = await createOrder(order);
@@ -15,13 +19,23 @@ const handleCreateOrder = async (req, res) => {
   })
 }
 const handleGetOrder = async (req, res) => {
-  const result = await getOrder(req.query.username);
+  if (req.query && req.query.userId) {
+    const result = await getOrder(req.query.userId);
 
-  res.status(200).json({
-    EM: result.EM,
-    EC: result.EC,
-    DT: result.DT
-  });
+    res.status(200).json({
+      EM: result.EM,
+      EC: result.EC,
+      DT: result.DT
+    });
+  }
+
+  else {
+    res.status(200).json({
+      EC: 3,
+      EM: "missleading query",
+      DT: []
+    })
+  }
 }
 const handleUpdateOrder = async (req, res) => {
   if (req.params.orderID) {

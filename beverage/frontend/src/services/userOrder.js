@@ -6,8 +6,8 @@ const createOrder = async (values) => {
   return response;
 }
 const fetchOrder = async (values) => {
-  const data = await axios.get(`/order?username=${values}`);
-  return data.DT;
+  const response = await axios.get(`/order?userId=${values}`);
+  return response;
 }
 const putOrder = async (orderID) => {
   const result = await axios.put(`/order/${orderID}`);

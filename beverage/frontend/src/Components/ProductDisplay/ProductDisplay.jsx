@@ -1,25 +1,16 @@
 import React, { useContext } from 'react'
 import './ProductDisplay.css'
-import star_icon from '../Assets/star_icon.png'
-import star_dull_icon from '../Assets/star_dull_icon.png'
-import { ShopContext } from '../../Context/ShopContext'
 import { useParams } from 'react-router-dom'
 import { UserContext } from '../../Context/UserContext'
 import { addItemCart } from '../../services/userCart'
 
 const ProductDisplay = (props) => {
-  const { user } = useContext(UserContext);
+  const { user, addToCart } = useContext(UserContext);
   const productID = useParams().productId;
   const { product } = props;
-  const { getTotalCartItems, updateTotal } = useContext(UserContext);
+  const { getTotalCartItems } = useContext(UserContext);
 
-  const addToCart = async (props) => {
-    const values = {
-      userData: user.username,
-      productID: props
-    };
-    await addItemCart(values);
-  }
+
 
   const handleCart = async () => {
     if (user.username === '')
@@ -31,44 +22,26 @@ const ProductDisplay = (props) => {
 
   }
   return (
-    <div className='productdisplay'>
-      <div className="productdisplay-left">
-        <img src={product.imageURL} alt="" />
-      </div>
-      <div className="productdisplay-right">
-        <div className="frame-display">
-          <h1>{product.name}</h1>
-          <div className="productdisplay-right-star">
-            <img src={star_icon} alt="" />
-            <img src={star_icon} alt="" />
-            <img src={star_icon} alt="" />
-            <img src={star_icon} alt="" />
-            <img src={star_dull_icon} alt="" />
-            <p>(20)</p>
+    <section class="product-details">
+      <div class="product-info">
+        <img src={product.imageUrl} alt="Milk Tea Delight" />
+        <div class="details">
+          <h2>{product.name}</h2>
+          <p>By { }</p>
+          <div class="rating">
+            <span>★★★★★</span>
+            <p>789 reviews</p>
           </div>
-          <div className="productdisplay-right-price">
-            <div className="stock">
-              {product.stock} có sẵn
-            </div>
-            <div className="price">
-              {product.price} .000 vnđ
-            </div>
+          <p>Published by: { }</p>
+          <p>Volume: 500ml</p>
+          <p>{product.description}</p>
+          <div class="actions">
+            <p>Price: ${product.price}</p>
+            <button onClick={() => { handleCart() }}><i class='bx bx-cart-add'></i>Add to cart</button>
           </div>
-          <div className="productdisplay-right-size">
-            <h1>Select Size</h1>
-            <div className="size">
-              <select>
-                <option value=''>Chọn size</option>
-                <option value='S'>S</option>
-                <option value='M'>M</option>
-                <option value='L'>L</option>
-              </select>
-            </div>
-          </div>
-          <button onClick={() => { handleCart() }}>Add to cart</button>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

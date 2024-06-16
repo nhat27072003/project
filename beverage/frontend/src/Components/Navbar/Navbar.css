@@ -19,7 +19,7 @@
 .nav-logo p {
   color: #171717;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 0;
 }
 
@@ -41,6 +41,7 @@
   justify-content: center;
   gap: 3px;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .admin {

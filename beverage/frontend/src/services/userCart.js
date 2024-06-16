@@ -6,6 +6,7 @@ const addItemCart = async (values) => {
 }
 const delItemCart = async (values) => {
   const result = await axios.delete(`/deleteitem?id=${values.id}&username=${values.username}`);
+  console.log("check del cart:", result);
   return result;
 }
 const fetchCart = async (username) => {

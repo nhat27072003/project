@@ -1,6 +1,6 @@
 /* Order.css */
 
-.user-order-list-container {
+.store-order-list-container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -9,7 +9,7 @@
   min-height: 90vh;
 }
 
-.user-order-list-container h2 {
+.store-order-list-container h2 {
   font-size: 23px;
   font-weight: 600;
 }

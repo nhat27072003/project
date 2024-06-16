@@ -1,0 +1,51 @@
+.customer-ratings {
+  margin-top: 2rem;
+  padding: 0 2rem;
+}
+
+.customer-ratings .ratings-overview {
+  display: flex;
+  align-items: center;
+  gap: 100px;
+  justify-content: space-evenly;
+}
+
+.customer-ratings .ratings-overview h4 {
+  margin-right: 1rem;
+}
+
+.customer-ratings .rating-breakdown div {
+  margin-bottom: 0.5rem;
+}
+
+.customer-ratings .customer-reviews .review {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 1rem auto;
+  width: 60%;
+}
+
+.customer-ratings .customer-reviews .review h5 {
+  margin: 0;
+}
+
+.customer-ratings .customer-reviews .review p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  unicode-bidi: isolate;
+}
+
+.customer-ratings .customer-reviews .review button {
+  margin-right: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+}

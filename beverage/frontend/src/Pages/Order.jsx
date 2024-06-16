@@ -1,24 +1,23 @@
 // OrderList.js
 import React, { useContext, useEffect, useState } from 'react';
 import './CSS/Order.css'; // Import file CSS để tùy chỉnh giao diện
-import { AuthContext } from './AuthProvider';
 import { Link } from 'react-router-dom';
-import { ShopContext } from '../Context/ShopContext';
 import { putOrder } from '../services/userOrder';
+import { UserContext } from '../Context/UserContext';
+import { confirmOrder } from '../services/manageOrder';
 
-const OrderList = ({ username }) => {
-  const { orders, getOrders } = useContext(ShopContext);
-  const { userData } = useContext(AuthContext);
+const OrderList = () => {
+  const { orders, getOrders, user } = useContext(UserContext);
 
   // Tạo state để lưu trữ groupedOrdersArray
   const [groupedOrdersArray, setGroupedOrdersArray] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState(false);
-
+  const [selectedStatus, setSelectedStatus] = useState(1);
+  const status = ['', 'Chờ xác nhận', 'Đã xác nhận', 'Đang giao', 'Đã giao'];
   useEffect(() => {
-    // Gọi API để lấy danh sách đơn hàng từ server
-    getOrders();
-  }, []); // Thay đổi chỉ khi getOrders thay đổi
 
+    getOrders();
+  }, []);
+  console.log(selectedStatus)
   function convertDateTimeToString(jsDate) {
     // Lấy các thành phần của ngày giờ
     const year = jsDate.getFullYear();
@@ -46,6 +45,7 @@ const OrderList = ({ username }) => {
           orderDate: new Date(order.orderDate).toISOString(),
           products: [],
           address: order.address,
+          phone: order.phone
         };
       }
 
@@ -82,14 +82,22 @@ const OrderList = ({ username }) => {
   const handleTabClick = (status) => {
     setSelectedStatus(status);
   };
-
+  const handleConfirm = async (orderID, status) => {
+    const result = await confirmOrder(orderID, status);
+    if (result.EC === 0) {
+      getOrders();
+    }
+  }
+  console.log('check order:', orders);
   return (
-    <div className="order-list-container">
-      <h2>Danh sách đơn hàng của {userData}</h2>
+    <div className="user-order-list-container">
+      <h2>Đơn hàng của bạn</h2>
       <div className="order">
         <div className="order-main">
-          <button onClick={() => handleTabClick(false)} style={{ background: selectedStatus === false ? 'white' : '', border: selectedStatus === false ? '' : 'none' }}>Chưa hoàn thành</button>
-          <button onClick={() => handleTabClick(true)} style={{ background: selectedStatus === true ? 'white' : '', border: selectedStatus === true ? '' : 'none' }}>Đã hoàn thành</button>
+          <button onClick={() => handleTabClick(1)} style={{ background: selectedStatus === 1 ? '#c7c7c7' : '' }}>{status[1]}</button>
+          <button onClick={() => handleTabClick(2)} style={{ background: selectedStatus === 2 ? '#c7c7c7' : '' }}>{status[2]}</button>
+          <button onClick={() => handleTabClick(3)} style={{ background: selectedStatus === 3 ? '#c7c7c7' : '' }}>{status[3]}</button>
+          <button onClick={() => handleTabClick(4)} style={{ background: selectedStatus === 4 ? '#c7c7c7' : '' }}>{status[4]}</button>
         </div>
         <ul className="order-list">
           {filterOrdersByStatus(selectedStatus).map((order) => (
@@ -97,10 +105,14 @@ const OrderList = ({ username }) => {
               <div className="left">
                 <p className="order-info">Mã đơn hàng #{order.orderID}</p>
                 <p className="order-info">Ngày đặt hàng: {order.orderDate}</p>
-                <p className="order-info">Tổng giá trị: <span>{order.sum} .000vnđ</span></p>
                 <p className='order-info'>Địa chỉ: {order.address}</p>
-                <p className='order-info'>Trạng thái:{order.status == false ? <span>Chưa hoàn thành</span> : <span>Đã hoàn thành</span>} </p>
-                {order.status == false ? <button onClick={() => handleStatus(order.orderID)}>Đã nhận</button> : <></>}
+                <p className='order-info'>Số điện thoại: {order.phone}</p>
+                <p className="order-info">Tổng đơn hàng: <span>{order.sum} .000vnđ</span></p>
+                <p className='order-info'>Trạng thái: <span>{status[order.status]}</span></p>
+                {order.status === 3 &&
+                  (
+                    <button onClick={() => { handleConfirm(order.orderID, 4) }}>Đã nhận</button>
+                  )}
               </div>
               <table className="right">
                 {order.products.map((product) => (
