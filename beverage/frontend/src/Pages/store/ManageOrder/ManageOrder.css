@@ -1,7 +1,6 @@
 /* Order.css */
 
 .store-order-list-container {
-  width: 100%;
   display: flex;
   flex-direction: column;
   background: #f4f4f4;
@@ -85,7 +84,7 @@
 
 .list-product {
   display: flex;
-  gap: 30px;
+  gap: 20px;
   justify-content: space-between;
   padding: 5px;
   align-items: center;
@@ -93,7 +92,7 @@
 
 .list-product td {
   flex: 2;
-  font-size: 17px;
+  font-size: 16px;
 
 }
 
@@ -131,7 +130,6 @@
 .list-product td.name,
 td.price {
   flex: 3;
-  color: #424242;
 }
 
 .order-info span {

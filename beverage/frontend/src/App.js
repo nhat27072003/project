@@ -15,6 +15,9 @@ import AddProduct from './Pages/store/AddProduct/AdProduct';
 import CRUDProduct from './Pages/store/CRUDProduct/CRUDProduct';
 import UpdateProduct from './Pages/store/UpdateProduct/UpdateProduct';
 import ManageOrder from './Pages/store/ManageOrder/ManageOrder';
+import ReviewProduct from './Pages/user/ReviewProduct/ReviewProduct';
+import ManagaStatistics from './Pages/admin/ManageStatistics/ManageStatistics';
+import ManageStatistics from './Pages/admin/ManageStatistics/ManageStatistics';
 
 
 function App() {
@@ -35,6 +38,7 @@ function App() {
           <Route path='admin/updateuser' element={<UpdateUser />}>
             <Route path=':userId' element={<UpdateUser />} />
           </Route>
+          <Route path='/admin/statistic' element={<ManageStatistics />}></Route>
           <Route path='/store/crudproduct/updateproduct' element={< UpdateProduct />}>
             <Route path=':productId' element={<UpdateProduct />} />
           </Route>

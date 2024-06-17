@@ -2,12 +2,12 @@ import React, { useContext } from 'react'
 import './ProductDisplay.css'
 import { useParams } from 'react-router-dom'
 import { UserContext } from '../../Context/UserContext'
-import { addItemCart } from '../../services/userCart'
+import StarRating from '../StarRating/StarRating'
 
-const ProductDisplay = (props) => {
+const ProductDisplay = ({ product, values }) => {
   const { user, addToCart } = useContext(UserContext);
   const productID = useParams().productId;
-  const { product } = props;
+  // const { product } = product;
   const { getTotalCartItems } = useContext(UserContext);
 
 
@@ -21,18 +21,18 @@ const ProductDisplay = (props) => {
     }
 
   }
+  console.log('chec product', product);
   return (
     <section class="product-details">
       <div class="product-info">
         <img src={product.imageUrl} alt="Milk Tea Delight" />
         <div class="details">
           <h2>{product.name}</h2>
-          <p>By { }</p>
           <div class="rating">
-            <span>★★★★★</span>
-            <p>789 reviews</p>
+            <StarRating rating={values.averageRating}></StarRating>
+            <p>{values.totalRatings} reviews</p>
           </div>
-          <p>Published by: { }</p>
+          <p>Published by: {product.storeName}</p>
           <p>Volume: 500ml</p>
           <p>{product.description}</p>
           <div class="actions">

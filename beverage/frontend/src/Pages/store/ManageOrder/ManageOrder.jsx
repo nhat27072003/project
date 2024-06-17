@@ -145,7 +145,7 @@ const ManageOrder = () => {
                       <td><Link to={`/product/${product.productID}`}>
                         <img src={product.imageUrl} className='carticon-product-icon' alt="" /></Link>
                       </td>
-                      <td className='name'> <Link to={`/product/${product.productID}`} style={{ textDecoration: 'none', color: '#454545' }}>
+                      <td className='name'> <Link to={`/product/${product.productID}`} style={{ textDecoration: 'none', color: 'black' }}>
                         <p>{product.name}</p>
                       </Link>
                       </td>

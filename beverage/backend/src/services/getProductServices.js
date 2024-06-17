@@ -53,7 +53,9 @@ const getDetailProduct = async (productId) => {
     await pool.connect();
     const request = pool.request();
 
-    const query = `SELECT * FROM Product WHERE productID = @productId`;
+    const query = `SELECT p.* ,u.name as storeName FROM Product p 
+                  JOIN Users u ON u.userID=p.userId 
+                  WHERE productID = @productId`;
 
     const result = await request
       .input('productId', sql.Int, parseInt(productId))

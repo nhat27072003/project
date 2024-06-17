@@ -1,7 +1,7 @@
 const { getRole, getUrl } = require("../services/accountServices");
 const { verifyToken } = require("./JWTAction")
 
-const publicRouter = ['/acount', '/login', '/sign', '/product', '/popular', '/cookie'];
+const publicRouter = ['/acount', '/login', '/sign', '/product', '/popular', '/cookie', '/review'];
 const productRegex = /^\/product\/\d+$/;
 
 

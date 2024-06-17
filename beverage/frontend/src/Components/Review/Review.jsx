@@ -1,52 +1,49 @@
-import React from 'react'
-import './Review.css'
+import React from 'react';
+import './Review.css';
 
-
-const Review = () => {
+// Component nhỏ để hiển thị từng đánh giá
+const ReviewItem = ({ review }) => {
   return (
-    <section class="customer-ratings">
-      <div class="ratings-overview">
+    <div className="review">
+      <h5>{review.name}</h5>
+      <p>{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</p>
+      <p>{review.review}</p>
+      <button>Like</button>
+      <button>Dislike</button>
+      <button>Report</button>
+    </div>
+  );
+};
+
+// Component chính để hiển thị danh sách các đánh giá và tính toán thống kê
+const Review = ({ reviews, values }) => {
+  // Khởi tạo đối tượng đếm số sao
+
+
+  return (
+    <section className="customer-ratings">
+      <div className="ratings-overview">
         <h3>Customer Ratings</h3>
-        <div class="rating">
-          <h4>4.8 / 5</h4>
-          <p>483 ratings</p>
+        <div className="rating">
+          {!isNaN(values.averageRating) &&
+            <h4>{values.averageRating} / 5</h4>}
+          <p>{values.totalRatings} ratings</p>
         </div>
-        <div class="rating-breakdown">
-          <div>★★★★★ 410</div>
-          <div>★★★★☆ 40</div>
-          <div>★★★☆☆ 23</div>
-          <div>★★☆☆☆ 6</div>
-          <div>★☆☆☆☆ 4</div>
+        <div className="rating-breakdown">
+          <div>★★★★★ {values.ratingCounts[5]}</div>
+          <div>★★★★☆ {values.ratingCounts[4]}</div>
+          <div>★★★☆☆ {values.ratingCounts[3]}</div>
+          <div>★★☆☆☆ {values.ratingCounts[2]}</div>
+          <div>★☆☆☆☆ {values.ratingCounts[1]}</div>
         </div>
       </div>
-      <div class="customer-reviews">
-        <div class="review">
-          <h5>Milk Tea Lover</h5>
-          <p>★★★★★ Refreshing</p>
-          <p>Discover the essence of Milk Tea with our premium selection...</p>
-          <button>Like (2)</button>
-          <button>Dislike (0)</button>
-          <button>Report</button>
-        </div>
-        <div class="review">
-          <h5>Coffee Enthusiast</h5>
-          <p>★★★★★ Energizing</p>
-          <p>Awaken your senses with the perfect cup of Coffee from BeverageHub...</p>
-          <button>Like (1)</button>
-          <button>Dislike (3)</button>
-          <button>Report</button>
-        </div>
-        <div class="review">
-          <h5>Thirst Quencher</h5>
-          <p>★★★★★ Revitalizing</p>
-          <p>Find your perfect thirst-quenching companion at BeverageHub with our selection of Soft Drinks...</p>
-          <button>Like (0)</button>
-          <button>Dislike (0)</button>
-          <button>Report</button>
-        </div>
+      <div className="customer-reviews">
+        {reviews.map((review, index) => (
+          <ReviewItem key={index} review={review} />
+        ))}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Review
+export default Review;

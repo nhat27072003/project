@@ -1,37 +1,24 @@
-// OrderList.js
 import React, { useContext, useEffect, useState } from 'react';
 import './CSS/Order.css'; // Import file CSS để tùy chỉnh giao diện
 import { Link } from 'react-router-dom';
-import { putOrder } from '../services/userOrder';
 import { UserContext } from '../Context/UserContext';
 import { confirmOrder } from '../services/manageOrder';
+import ReviewProduct from './user/ReviewProduct/ReviewProduct';
 
 const OrderList = () => {
   const { orders, getOrders, user } = useContext(UserContext);
 
-  // Tạo state để lưu trữ groupedOrdersArray
+  // State để lưu trữ groupedOrdersArray
   const [groupedOrdersArray, setGroupedOrdersArray] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState(1);
+  const [reviewProduct, setReviewProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const status = ['', 'Chờ xác nhận', 'Đã xác nhận', 'Đang giao', 'Đã giao'];
+  const [orderId, setOrderId] = useState();
   useEffect(() => {
-
     getOrders();
-  }, []);
-  console.log(selectedStatus)
-  function convertDateTimeToString(jsDate) {
-    // Lấy các thành phần của ngày giờ
-    const year = jsDate.getFullYear();
-    const month = jsDate.getMonth() + 1; // Tháng bắt đầu từ 0
-    const day = jsDate.getDate();
-    const hours = jsDate.getHours();
-    const minutes = jsDate.getMinutes();
-    const seconds = jsDate.getSeconds();
+  }, [user]);
 
-    // Tạo chuỗi theo định dạng mong muốn, ví dụ: "YYYY-MM-DD HH:mm:ss"
-    const formattedString = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day} ${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-    return formattedString;
-  }
   useEffect(() => {
     // Tạo một đối tượng để nhóm đơn hàng theo orderID
     const groupedOrders = orders.reduce((result, order) => {
@@ -69,28 +56,42 @@ const OrderList = () => {
     setGroupedOrdersArray(Object.values(groupedOrders));
   }, [orders]); // Thay đổi chỉ khi orders thay đổi
 
-  const handleStatus = async (orderID) => {
-    const result = await putOrder(orderID);
-    if (result.EC === 0)
-      await getOrders();
-  }
 
   const filterOrdersByStatus = (status) => {
-    return groupedOrdersArray.filter((order) => order.status === status);
+    console.log("chck status:", status);
+    return groupedOrdersArray.filter((order) => {
+      if (status === 4 && order.status === 5)
+        return true;
+      else return order.status === status;
+    }).reverse();
+    ;
   };
 
   const handleTabClick = (status) => {
     setSelectedStatus(status);
   };
+
   const handleConfirm = async (orderID, status) => {
     const result = await confirmOrder(orderID, status);
     if (result.EC === 0) {
       getOrders();
     }
-  }
-  console.log('check order:', orders);
+  };
+
+  const handleReview = (product, orderId) => {
+    setOrderId(orderId);
+    setReviewProduct(product);
+    setIsModalOpen(true); // Open modal
+    handleConfirm(orderId, 5);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Close modal
+    setReviewProduct(null);
+  };
+
   return (
-    <div className="user-order-list-container">
+    <div className={`user-order-list-container ${isModalOpen ? 'modal-open' : ''}`}>
       <h2>Đơn hàng của bạn</h2>
       <div className="order">
         <div className="order-main">
@@ -116,17 +117,21 @@ const OrderList = () => {
               </div>
               <table className="right">
                 {order.products.map((product) => (
-                  <div className="list">
-                    <tr className='list-product' key={product.productID}>
-                      <td><Link to={`/product/${product.productID}`}>
-                        <img src={product.imageUrl} className='carticon-product-icon' alt="" /></Link>
+                  <div className="list" key={product.productID}>
+                    <tr className='list-product'>
+                      <td>
+                        <Link to={`/product/${product.productID}`}>
+                          <img src={product.imageUrl} className='carticon-product-icon' alt={product.name} />
+                        </Link>
                       </td>
-                      <td className='name'> <Link to={`/product/${product.productID}`} style={{ textDecoration: 'none', color: '#454545' }}>
-                        <p>{product.name}</p>
-                      </Link>
+                      <td className='name'>
+                        <Link to={`/product/${product.productID}`} style={{ textDecoration: 'none', color: 'black' }}>
+                          <p>{product.name}</p>
+                        </Link>
                       </td>
-                      <td className='price'>Đơn giá: {product.priceProduct} .000nvđ</td>
+                      <td className='price'>Đơn giá: {product.priceProduct} .000vnđ</td>
                       <td className='quantity'>Số lượng: {product.quantity}</td>
+                      {order.status === 4 && <td><button onClick={() => { handleReview(product, order.orderID) }}>Đánh giá</button></td>}
                     </tr>
                     <hr />
                   </div>
@@ -134,9 +139,16 @@ const OrderList = () => {
               </table>
             </li>
           ))}
-
         </ul>
       </div>
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <button className="close-modal" onClick={closeModal}>X</button>
+            {reviewProduct && <ReviewProduct product={reviewProduct} orderId={orderId} closeModal={closeModal} />}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

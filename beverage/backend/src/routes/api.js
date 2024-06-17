@@ -9,6 +9,7 @@ const { handleCreateOrder, handleGetOrder, handleUpdateOrder } = require('../con
 const { handleGetUsers, getDetailUser, handleUpdateUser, handleDeleteUser, handleGetAllAccount } = require('../controllers/manageUser');
 const upload = require('../config/saveImage');
 const { authenicateUser } = require('../middleware/auth');
+const { handleCreateReview, handleGetReview } = require('../controllers/reviewProduct');
 
 //authenicate user
 router.all('*', authenicateUser);
@@ -74,6 +75,9 @@ router.put('/store/order/update', handleStoreUpdateOrder);
 
 router.get('/store/orders', handleManageOrder);
 
+//review product
+router.get('/review', handleGetReview);
 
+router.post('/user/review', handleCreateReview);
 
 module.exports = router

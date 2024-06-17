@@ -1,0 +1,19 @@
+.star-rating {
+  position: relative;
+  display: inline-block;
+  font-size: 1.5rem;
+  color: lightgray;
+}
+
+.star-rating-top {
+  color: gold;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.star-rating-bottom {
+  color: lightgray;
+}
