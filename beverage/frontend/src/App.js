@@ -9,12 +9,15 @@ import Shop from './Pages/Shop';
 import Footer from './Components/Footer/Footer';
 import Signup from './Pages/Signup';
 import OrderList from './Pages/Order';
-import ManageOrder from './Pages/admin/ManageOrder/ManageOrder';
 import ManageUsers from './Pages/admin/ManageUsers/manageUsers';
 import UpdateUser from './Pages/admin/ManageUsers/updateUser';
 import AddProduct from './Pages/store/AddProduct/AdProduct';
 import CRUDProduct from './Pages/store/CRUDProduct/CRUDProduct';
 import UpdateProduct from './Pages/store/UpdateProduct/UpdateProduct';
+import ManageOrder from './Pages/store/ManageOrder/ManageOrder';
+import ReviewProduct from './Pages/user/ReviewProduct/ReviewProduct';
+import ManagaStatistics from './Pages/admin/ManageStatistics/ManageStatistics';
+import ManageStatistics from './Pages/admin/ManageStatistics/ManageStatistics';
 
 
 function App() {
@@ -28,13 +31,14 @@ function App() {
           <Route path='/caphe' element={<ShopCategory category="cafe" />} />
           <Route path='/nuocgiaikhat' element={<ShopCategory category="nuoc-giai-khat" />} />
           <Route path='/order' element={<OrderList />} />
-          <Route path='/admin/manageorder' element={<ManageOrder />} />
+          <Route path='/store/manageorder' element={<ManageOrder />} />
           <Route path='/store/crudproduct/addproduct' element={<AddProduct />} />
           <Route path='/store/manageproducts' element={< CRUDProduct />} />
           <Route path='/admin/manageusers' element={<ManageUsers />} />
           <Route path='admin/updateuser' element={<UpdateUser />}>
             <Route path=':userId' element={<UpdateUser />} />
           </Route>
+          <Route path='/admin/statistic' element={<ManageStatistics />}></Route>
           <Route path='/store/crudproduct/updateproduct' element={< UpdateProduct />}>
             <Route path=':productId' element={<UpdateProduct />} />
           </Route>

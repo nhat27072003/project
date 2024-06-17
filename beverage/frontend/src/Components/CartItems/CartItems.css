@@ -41,6 +41,22 @@
     background: #fc2f2f;
 }
 
+.cartitems-format .change-quantity {
+    display: flex;
+    gap: 20px;
+}
+
+.cartitems-format .change-quantity i {
+    font-size: 20px;
+    border: 1px solid;
+    cursor: pointer;
+    background: #f4f4f4;
+}
+
+.cartitems-format .change-quantity i:hover {
+    background: #e2e2e2;
+}
+
 .cartitems-quantity {
     width: 50px;
     height: 40px;
@@ -98,4 +114,8 @@
 
 .cartitems-total button:hover {
     background: #fc2f2f;
+}
+
+.store-item {
+    border-bottom: 1px solid #c1c1c1;
 }

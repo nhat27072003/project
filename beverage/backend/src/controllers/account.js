@@ -18,7 +18,7 @@ const handleLogin = async (req, res) => {
     const result = await getAccount(username, password);
 
     if (result.EC === 0) {
-      res.cookie('jwt', result.DT.access_token, { httpOnly: true });
+      res.cookie('jwt', result.DT.access_token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
     }
 
     res.status(200).json({

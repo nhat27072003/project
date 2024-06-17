@@ -1,0 +1,62 @@
+review-page {
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+.review-container {
+  width: 80%;
+  max-width: 800px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.review-container h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.review-container .form-group {
+  margin-bottom: 15px;
+}
+
+.review-container label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.review-container input[type="text"],
+.review-container select,
+.review-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  color: #333;
+}
+
+.review-container textarea {
+  resize: vertical;
+}
+
+.review-container button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.review-container button:hover {
+  background-color: #45a049;
+}
