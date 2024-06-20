@@ -6,10 +6,7 @@ const handleAddProduct = async (req, res) => {
 
   let imageUrl = null;
   // Nếu có file ảnh từ client, tải lên Cloudinary và nhận URL
-  console.log('File:', req.file);
-  console.log('Body:', req.body);
   if (req.file) {
-    console.log("come here");
     const cloudinaryResponse = await cloudinary.uploader.upload(req.file.path);
     imageUrl = cloudinaryResponse.secure_url;
   }
@@ -24,7 +21,6 @@ const handleAddProduct = async (req, res) => {
       userId: req.body.userId
     }
 
-    console.log(values);
     const result = await addProduct(values);
 
     res.status(200).json({
@@ -71,7 +67,6 @@ const deleteProduct = async (req, res) => {
   if (req.params.productId) {
     const productId = req.params.productId;
     const result = await delProduct(productId);
-    console.log("check delete", result);
     res.status(200).json({
       EM: result.EM,
       EC: result.EC,

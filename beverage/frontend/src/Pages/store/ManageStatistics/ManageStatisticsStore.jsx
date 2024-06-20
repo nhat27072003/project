@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import './ManageStatistics.css';
-import { getRevenue, getrevenueCategory } from '../../../services/revenue';
+import './ManageStatisticsStore.css';
+import { StoreGetrevenueCategory, storeGetRevenue } from '../../../services/revenue';
 import { UserContext } from '../../../Context/UserContext';
+
 Chart.register(ChartDataLabels);
 
-const ManageStatistics = () => {
+const ManageStatisticsStore = () => {
   const { user, authenicateUser } = useContext(UserContext);
   const [monthlyRevenueData, setMonthlyRevenueData] = useState([]);
   const [yearRevenueData, setYearRevenueData] = useState([]);
@@ -19,9 +20,9 @@ const ManageStatistics = () => {
 
   const fetchRevenueData = async (start, end) => {
     try {
-      const monthResult = await getRevenue('month', start, end);
-      const yearResult = await getRevenue('year', start, end);
-      const categoryResult = await getrevenueCategory(start, end);
+      const monthResult = await storeGetRevenue(user.userId, 'month', start, end);
+      const yearResult = await storeGetRevenue(user.userId, 'year', start, end);
+      const categoryResult = await StoreGetrevenueCategory(user.userId, start, end);
       if (monthResult.EC === 0 || yearResult.EC === 0 || categoryResult.EC === 0) {
         setMonthlyRevenueData(monthResult.DT);
         setYearRevenueData(yearResult.DT);
@@ -201,10 +202,9 @@ const ManageStatistics = () => {
   return (
     <div className="statistics-container">
       <header>
-        <h2>Manage Revenue</h2>
+        <h2>Manage revenue</h2>
       </header>
       <aside>
-        <div className="logo">Revenue</div>
         <div className="filters">
           <h3>Filters</h3>
           <button onClick={resetData}>Từ trước đến nay</button>
@@ -243,4 +243,4 @@ const ManageStatistics = () => {
   );
 };
 
-export default ManageStatistics;
+export default ManageStatisticsStore;

@@ -54,7 +54,6 @@ const handleSignAccount = async (req, res) => {
 const handleGetCookie = async (req, res) => {
   if (req.cookies && req.cookies.jwt) {
     const result = await getCookie(req.cookies.jwt);
-    console.log(result);
     res.status(200).json({
       EC: result.EC,
       EM: result.EM,

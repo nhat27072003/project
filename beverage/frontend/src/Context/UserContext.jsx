@@ -93,7 +93,7 @@ const UserContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ cartItems, addToCart, user, loginContext, logoutContext, getTotalCartItems, total, handleDelete, getCart, orders, getOrders }}>
+    <UserContext.Provider value={{ authenicateUser, cartItems, addToCart, user, loginContext, logoutContext, getTotalCartItems, total, handleDelete, getCart, orders, getOrders }}>
       {children}
     </UserContext.Provider>
   )

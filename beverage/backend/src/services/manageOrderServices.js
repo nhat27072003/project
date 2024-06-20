@@ -2,7 +2,6 @@ const { pool, sql } = require('../config/database')
 
 const getStoreOrder = async (storeId) => {
   try {
-    console.log('id:', storeId)
     await pool.connect();
     const sqlstring = `SELECT uu.username,o.orderID, o.status, o.sum,o.address, o.phone,o.orderDate, op.oderProductID, op.quantity, op.priceProduct,p.*
                     FROM Orders o
@@ -15,7 +14,6 @@ const getStoreOrder = async (storeId) => {
       .input('storeId', sql.Int, storeId)
       .query(sqlstring);
 
-    console.log(result.recordset);
     return {
       EC: 0,
       EM: "OK",
